@@ -1,0 +1,45 @@
+ft_select
+
+
+-------
+- prend une liste d'arguments
+- affiche la liste
+- liste circulaire
+
+-------
+
+- se deplacer grace au fleches
+-- up & down 
+-- left & right, si plusieur colonnes
+
+- selectionne/deselectionne l'element courant avec espace, le curseur pointe automatiquement sur lelement suivant
+
+- valide la selection avec 'enter' == renvoi la selection, les choix sont separe d espaces
+
+- 'echap' termine le programme sans retourne de selection
+
+- 'delete' ou 'backspace' lelement courant est suprime si la liste est vide, fin du programme
+-------
+
+
+--------
+- gerer le redimentionnement de la fenetre 
+-- s'affiche sur plusieurs colonnes si la fenetre ne comporte pas assez de lignes
+--- si meme comme cela, l'affichage reste impossible, precisez que la fenetre est trop petite
+--------
+
+--------
+- 0 choix non selectionne :: texte normal
+- 1 choix selectionne :: texte video inverse 
+- 2 position curseur/element courant :: texte souligne
+- 3 position curseur/element courant + choix selectionne :: texte souligne + video inverse
+--------
+
+-------
+- peut importe la facon dont le programme quitte la structure termios initial doit etre restaurer
+-- suite a 'enter', 'echap', 'ctrl-C', 'ctrl-Z ???'
+--- (ducoup peut etre que suite au 'ctrl-Z' restaurer la struct termios, et a la reprise rechanger la struct ??? )
+------ peut etre comme pendant un redimentionnement ou un 'ctrl-Z' checker a chaque putstr si la struct termios a changer ou les changements de dimentionnement 
+--------------  ou --------------------------
+le tour de boucle est suffisament rapide  a tester !!!
+
