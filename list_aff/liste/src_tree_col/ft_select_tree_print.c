@@ -40,7 +40,8 @@ void		ft_select_tree_print(const t_liste **ptr_tab, const t_config_liste *t_c_l,
     int ck;
     int i;
     int x;
-	int tmp;
+    int tmp;
+    int j;
 
 	printf("%s\n", "------ tree----print------");
     ck = 0;
@@ -48,8 +49,10 @@ void		ft_select_tree_print(const t_liste **ptr_tab, const t_config_liste *t_c_l,
     while (i < t_c_l->i_nb_ligne_col)
 	{
 	    x = t_c_l->i_index_col_aff;
-		tmp = x + t_c_l->i_nb_col_aff;
-	    while (x < tmp)
+	    tmp = t_c_l->i_nb_col_aff;
+	    j = 0;
+	    //	    tmp = x + t_c_l->i_nb_col_aff;
+	    while (j < tmp)
 		{
 
 			if (ptr_tab[x]->si_end == 1)
@@ -69,6 +72,9 @@ void		ft_select_tree_print(const t_liste **ptr_tab, const t_config_liste *t_c_l,
 						ptr_tab[x] = ptr_tab[x]->n;
 					}
 			x++;
+			if (x > t_c_l->i_nb_col)
+			    x = 0;
+			j++;
 		}		  
 	    ft_putstr("\n");
 	    i++;

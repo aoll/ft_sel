@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 
 #include "../inc/ft_select_tab_key.h"
-
+/*
 void	ft_()
 {
 	
 	return ;
 }
-
+*/
 void    ****ft_select_tab_key(void)
 {
 	void (****f);
