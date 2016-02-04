@@ -6,7 +6,7 @@
 /*   By: aollivie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 17:39:54 by aollivie          #+#    #+#             */
-/*   Updated: 2016/02/04 17:38:26 by aollivie         ###   ########.fr       */
+/*   Updated: 2016/02/04 17:43:35 by aollivie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	main(int ac, char **av)
 	ft_select_tree_tab_f(&t);
 	ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)c_l, t);
   
-	ft_select_tab_key_new(&f);
+	if (!(ft_select_tab_key_new(&f)))
+		return (0);
 	f[1][1][1]();
 	ft_select_liste_free(&l); // return 0 si pas alloue
 	ft_select_config_free(&c_l); // return 0 si pas alloue

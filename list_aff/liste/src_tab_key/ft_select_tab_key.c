@@ -6,19 +6,19 @@
 /*   By: aollivie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 17:38:00 by aollivie          #+#    #+#             */
-/*   Updated: 2016/02/04 17:35:28 by aollivie         ###   ########.fr       */
+/*   Updated: 2016/02/04 17:44:07 by aollivie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_select_tab_key.h"
 
-int	ft_p_test(void)
+static int	ft_p_test(void)
 {
 	printf("%s\n", "PAS ASSIGNE");
 	return (0);
 }
 
-void    ft_select_tab_key_init(int (* ****f)(void))
+static void    ft_select_tab_key_init(int (* ****f)(void))
 {
 	(*f)[1][1][1] = ft_select_key_up;
 	(*f)[1][1][2] = ft_select_key_down;
@@ -34,7 +34,7 @@ void    ft_select_tab_key_init(int (* ****f)(void))
 	(*f)[4][1][6] = ft_select_key_sup_del;
 }
 
-void    ft_select_tab_key_new(int (* ****f)(void))
+int    ft_select_tab_key_new(int (* ****f)(void))
 {
 	int z;
 	int y;
@@ -43,14 +43,17 @@ void    ft_select_tab_key_new(int (* ****f)(void))
 	z = 0;
 	y = 0;
 	x = 0;
-	*f = malloc(sizeof(void ***) * 6);
+	if (!(*f = malloc(sizeof(void ***) * 6)))
+		return (0);
 	while (z < 6)
 	{
-		(*f)[z] = malloc(sizeof(void **) * 3);
+		if (!((*f)[z] = malloc(sizeof(void **) * 3)))
+			return (0);
 		y = 0;
 		while (y < 3)
 		{
-			(*f)[z][y] = malloc(sizeof(void *) * 7);
+			if (!((*f)[z][y] = malloc(sizeof(void *) * 7)))
+				return (0);
 			x = 0;
 			while (x < 7)
 			{
@@ -62,4 +65,5 @@ void    ft_select_tab_key_new(int (* ****f)(void))
 		z++;
 	}
 	ft_select_tab_key_init(f);
+	return (1);
 }

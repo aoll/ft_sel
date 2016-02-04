@@ -6,7 +6,7 @@
 /*   By: aollivie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 17:32:41 by aollivie          #+#    #+#             */
-/*   Updated: 2016/02/04 17:36:04 by aollivie         ###   ########.fr       */
+/*   Updated: 2016/02/04 17:43:02 by aollivie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ struct	s_key
 	int x;
 };
 
-void	ft_select_tab_key_new(int (* ****f)(void));
+int	ft_select_tab_key_new(int (* ****f)(void));
 
 void    ft_select_table_0(t_key **key, char *s);
 void    ft_select_table_1(t_key **key, char *s);
