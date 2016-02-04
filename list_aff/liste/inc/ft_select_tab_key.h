@@ -6,7 +6,7 @@
 /*   By: aollivie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 17:32:41 by aollivie          #+#    #+#             */
-/*   Updated: 2016/02/03 17:45:06 by aollivie         ###   ########.fr       */
+/*   Updated: 2016/02/04 17:36:04 by aollivie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,28 @@
 
 #include "../../../libft/libft.h"
 
-void	****ft_select_tab_key(void);
+typedef struct s_key	t_key;
+struct	s_key
+{
+	int z;
+	int y;
+	int x;
+};
+
+void	ft_select_tab_key_new(int (* ****f)(void));
+
+void    ft_select_table_0(t_key **key, char *s);
+void    ft_select_table_1(t_key **key, char *s);
+void    ft_select_table_2(t_key **key, char *s);
+
+int     ft_select_key_up(void);
+int     ft_select_key_down(void);
+int     ft_select_key_right(void);
+int     ft_select_key_left(void);
+
+int     ft_select_key_return(void);
+int     ft_select_key_space(void);
+int     ft_select_key_echap(void);
+int     ft_select_key_sup_del(void);
 
 #endif

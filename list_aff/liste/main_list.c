@@ -6,7 +6,7 @@
 /*   By: aollivie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 17:39:54 by aollivie          #+#    #+#             */
-/*   Updated: 2016/02/03 17:49:28 by aollivie         ###   ########.fr       */
+/*   Updated: 2016/02/04 17:38:26 by aollivie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int ac, char **av)
 	t_config_liste	*c_l;
 	t_tree_col	*t_t_c;
 	void	(**t)(const char *, int _pa);
-	void	(****f);
+	int	(****f)(void);//(int z, int y, int x);
 
 	if ((l = ft_select_liste((const int)(ac - 1),\
 						(const char **)(++av))) == NULL)
@@ -41,8 +41,8 @@ int	main(int ac, char **av)
 	ft_select_tree_tab_f(&t);
 	ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)c_l, t);
   
-	f = ft_select_tab_key();
-
+	ft_select_tab_key_new(&f);
+	f[1][1][1]();
 	ft_select_liste_free(&l); // return 0 si pas alloue
 	ft_select_config_free(&c_l); // return 0 si pas alloue
 	ft_select_tree_free(&t_t_c); // return 0 si pas alloue

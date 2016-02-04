@@ -6,7 +6,7 @@
 #    By: aollivie <aollivie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/02/02 08:22:38 by aollivie          #+#    #+#              #
-#    Updated: 2016/02/03 17:30:10 by aollivie         ###   ########.fr        #
+#    Updated: 2016/02/04 17:36:40 by aollivie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -23,7 +23,10 @@ SRC = main_list.c src_liste/ft_select_liste.c src_liste/ft_select_liste_free.c\
 		src_tree_col/ft_select_tree_tab_f.c\
 		src_tree_col/ft_select_tree_tab_f_free.c\
 		src_tree_col/ft_select_tree_free.c\
-		src_tab_key/ft_select_tab_key.c
+		src_tab_key/ft_select_tab_key.c\
+		src_tab_key/ft_select_tab_func_ctrl.c\
+		src_tab_key/ft_select_tab_func_mouv.c\
+		src_tab_key/ft_select_table.c
 
 OBJ = $(SRC:.c=.o)
 
