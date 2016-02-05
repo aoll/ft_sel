@@ -1,0 +1,85 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_select_tree_print.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aollivie <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/02/03 10:27:22 by aollivie          #+#    #+#             */
+/*   Updated: 2016/02/03 17:13:28 by aollivie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../inc/ft_select_tree_col.h"
+
+/*
+static void	ft_putstr_space(int pad)
+{
+	while (pad)
+	{
+		ft_putchar(' ');
+		pad--;
+	}
+	return ;
+}
+
+static void	ft_putstr_s_name(const t_liste *l, const t_config_liste *t_c_l)
+{
+	static int i = 0;
+
+	i++;
+//	printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
+	ft_putstr(l->s_name);
+	ft_putstr_space(t_c_l->i_l_str_max - (int)ft_strlen(l->s_name));
+	return ;
+}
+*/
+
+void		ft_select_tree_print(const t_liste **ptr_tab, const t_config_liste *t_c_l, void (**t)(const char *s, int _pa))
+{
+    int ck;
+    int i;
+    int x;
+    int tmp;
+    int j;
+
+    //printf("%s\n", "------ tree----print------");
+    ck = 0;
+    i = 0;
+    while (i < t_c_l->i_nb_ligne_col)
+	{
+	    x = t_c_l->i_index_col_aff;
+	    tmp = t_c_l->i_nb_col_aff;
+	    j = 0;
+	    //	    tmp = x + t_c_l->i_nb_col_aff;
+	    while (j < tmp)
+		{
+
+			if (ptr_tab[x]->si_end == 1)
+			{
+				if (ck == 0)
+					//	ft_putstr_s_name((const t_liste*)ptr_tab[x], t_c_l);
+					t[ptr_tab[x]->si_etat]((const char*)ptr_tab[x]->s_name, t_c_l->i_l_str_max - (int)ft_strlen(ptr_tab[x]->s_name));
+				ck = 1;
+			}
+				
+			else
+			{
+					if (ptr_tab[x]->s_name)
+						t[ptr_tab[x]->si_etat]((const char*)ptr_tab[x]->s_name, t_c_l->i_l_str_max - (int)ft_strlen(ptr_tab[x]->s_name));
+						//	ft_putstr_s_name((const t_liste*)ptr_tab[x], t_c_l);
+			if (ptr_tab[x]->n)
+						ptr_tab[x] = ptr_tab[x]->n;
+					}
+			x++;
+			if (x > t_c_l->i_nb_col)
+			    x = 0;
+			j++;
+		}		  
+	    i++;
+	    if (i < t_c_l->i_nb_ligne_col)
+	        ft_putstr("\n");
+	}
+    //		printf("%s\n", "------ tree----print-----end-----");
+    return ;
+}
