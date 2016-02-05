@@ -14,25 +14,25 @@
 
 int	ft_select_key_return(void)
 {
-	printf("%s\n", "return");
+    ft_putstr("return\n");
 	return (1);
 }
 
 int	ft_select_key_space(void)
 {
-	printf("%s\n", "SPACE");
+	ft_putstr("SPACE\n");
 	return (1);
 }
 
 int	ft_select_key_echap(void)
 {
-	printf("%s\n", "ECHAP");
-	return (1);
+    ft_putstr("ECHAP");
+	return (0);
 }
 
 int	ft_select_key_sup_del(void)
 {
-	printf("%s\n", "DEL");
+    ft_putstr("DEL");
 	return (1);
 }
 

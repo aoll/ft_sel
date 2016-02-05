@@ -25,9 +25,9 @@ struct	s_key
 
 int	ft_select_tab_key_new(int (* ****f)(void));
 
-void    ft_select_table_0(t_key **key, char *s);
-void    ft_select_table_1(t_key **key, char *s);
-void    ft_select_table_2(t_key **key, char *s);
+int    ft_select_table_0(t_key **key, char *s);
+int    ft_select_table_1(t_key **key, char *s);
+int    ft_select_table_2(t_key **key, char *s);
 
 int     ft_select_key_up(void);
 int     ft_select_key_down(void);

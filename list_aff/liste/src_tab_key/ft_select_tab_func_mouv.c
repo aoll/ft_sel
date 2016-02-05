@@ -14,24 +14,24 @@
 
 int		ft_select_key_up(void)
 {
-	printf("%s\n", "UP");
+	ft_putstr("UP");
 	return (1);
 }
 
 int	ft_select_key_down(void)
 {
-	printf("%s\n", "DOWN");
+	ft_putstr("DOWN");
 	return (1);
 }
 
 int	ft_select_key_right(void)
 {
-	printf("%s\n", "rIGHT");
+	ft_putstr("rIGHT");
 	return (1);
 }
 
 int	ft_select_key_left(void)
 {
-	printf("%s\n", "LEFT");
+	ft_putstr("LEFT");
 	return (1);
 }

@@ -15,6 +15,9 @@
 #include "inc/ft_select_tree_col.h"
 #include "inc/ft_select_tab_key.h"
 #include <sys/ioctl.h>
+#include <term.h>
+#include <termios.h>
+#include <signal.h>
 
 void	ft_p_t_c(t_config_liste *t)
 {
@@ -26,7 +29,7 @@ int	ft_select_ck_size_screen(t_config_liste **t_c_l)
 {
 	struct winsize  size;
 	int				ck;
-	
+
 	ck = 0;
     if (ioctl(STDIN_FILENO,TIOCGWINSZ, (char*) &size) < 0)
         return (0);
@@ -52,8 +55,12 @@ int	ft_select_kernel(const int ac, const char **av)
 	void	(**t)(const char *, int _pa);
 	int	(****f)(void);//(int z, int y, int x);
 	int ck;
+	char *buff;
+	t_key *key;
+	int size_screen;
 
-	
+	if (!(key = malloc(sizeof(t_key))))
+	    return (0);
 	if ((l = ft_select_liste((const int)(ac),\
 						(const char **)(av))) == NULL)
 		return (0);
@@ -76,29 +83,38 @@ int	ft_select_kernel(const int ac, const char **av)
 	f[1][1][1]();
 	ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)c_l, t);
 */ //a virer!!
-	printf("\e[1;1H\e[2J");
+	ft_putstr("\e[1;1H\e[2J");
 	ck = 1;
+	buff = ft_strnew(3);
+	//	while (1 == 1)
 	while (1 == 1)
-	{
+	    {
+		
 		if (ft_select_ck_size_screen(&c_l))
-		{
-			//
-				if (!ft_select_config_init(&c_l))
-					ft_putstr("Error: terminal to small\n");
-				
-				ck++;
-				ft_select_tree_free(&t_t_c); // return 0 si pas alloue
-				if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)c_l)))
-					return (0);
-		}
+		    {
+			ft_putstr("SIZE\n");// debug
+			if (!ft_select_config_init(&c_l))
+			    {
+				ft_putstr("Error: terminal to small\n");
+				return (0);
+			    }
+			ck++;
+			ft_select_tree_free(&t_t_c); // return 0 si pas alloue
+			if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)c_l)))
+			    return (0);
+		    }
 		if (ck)
-		{
-			printf("\e[1;1H\e[2J");
+		    {
+			ft_putstr("\e[1;1H\e[2J");
 			ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)c_l, t);
 			ck = 0;
-		}
-	}
-
+		    }
+		if (read(0, buff, 3) > 0)
+		    {
+			f[ft_select_table_0(&key, buff)][ft_select_table_1(&key, buff)][ft_select_table_2(&key, buff)]();
+			buff = ft_strnew(3);
+		    }
+	    }
 	ft_select_liste_free(&l); // return 0 si pas alloue
 	ft_select_config_free(&c_l); // return 0 si pas alloue
 	ft_select_tree_free(&t_t_c); // return 0 si pas alloue
@@ -107,10 +123,50 @@ int	ft_select_kernel(const int ac, const char **av)
 	return (1);
 }
 
+	//printf("z == %d, y == %d, x == %d\n", k->z, k->y, k->x);
+		    /*
+			ft_putchar('|');
+			ft_putnbr(ft_select_table_0(&k, buff));
+			ft_putchar(':');
+			ft_putnbr(ft_select_table_1(&k, buff));
+			ft_putchar(':');
+			ft_putnbr(ft_select_table_2(&k, buff));
+			ft_putchar('|');	
+		    */
+		    //f[2][1][3]();
+
+
 //++av , ac - 1//
 
 int	main(int ac, char **av)
 {
+    const char      *name_term;// = getenv("TERM");                                                                                        
+    struct termios term;
+    //  void *f = ft_putchar;
+    const char *res;
+
+    //signal ctrl+C
+    //  signal(2, SIG_IGN);
+
+    if ((name_term = getenv("TERM")) == NULL)
+	return (-1);
+    // 1 if success, 0 if there are no such entry, -1 if dqtqbqse term can't be found                                                      
+    //su gnu en passant un buffer null, UNIX le buffer doit etre alloue de 2048                                                            
+    if (tgetent(NULL, name_term) != 1)
+	return (-1);
+    if (tcgetattr(0, &term) == -1)
+	return (-1);
+    //terminal mode cannonique:: un read sur lentre standart                                                                               
+    //ce fera a chaque touche presse sans attendre que la touche entree soit press                                                         
+    term.c_lflag &= ~(ICANON);
+    term.c_lflag &= ~(ECHO);
+    term.c_cc[VMIN] = 0; // ??                                                                                                             
+    term.c_cc[VTIME] = 0; // ??                                                                                                            
+    if (tcsetattr(0, TCSADRAIN, &term) == -1)
+	return (-1);
+
+
+
 	if (!(ft_select_kernel((const int)(ac - 1), (const char **)++av)))
 		return (0);
 //	printf("align %zu\n", sizeof(t_liste));

@@ -55,7 +55,7 @@ t_tree_col	*ft_select_tree_col_new(t_liste **liste, const t_config_liste *t_c_l)
     if (!(n->ptr_tab = malloc(sizeof(t_liste *) * (unsigned int)t_c_l->i_nb_col)))
 		return (NULL);
 	// n->ptr_tab[t_c_l->i_nb_col] = NULL;
-	printf("nombre de collonne -->> %d\n", t_c_l->i_nb_col);
+    //	printf("nombre de collonne -->> %d\n", t_c_l->i_nb_col);
     ft_tree_col_init_tab(&n->ptr_tab, liste, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
     n->ptr_curseur = *liste;
     return (n);

@@ -14,7 +14,7 @@
 
 static int	ft_p_test(void)
 {
-	printf("%s\n", "PAS ASSIGNE");
+    ft_putstr("PAS ASSIGNE");
 	return (0);
 }
 
@@ -25,13 +25,13 @@ static void    ft_select_tab_key_init(int (* ****f)(void))
 	(*f)[1][1][3] = ft_select_key_right;
 	(*f)[1][1][4] = ft_select_key_left;
 
-	(*f)[2][1][3] = ft_select_key_return;
+	(*f)[2][2][5] = ft_select_key_return;
 	(*f)[3][2][5] = ft_select_key_space;
 	(*f)[1][2][5] = ft_select_key_echap;
 	(*f)[5][2][5] = ft_select_key_sup_del;
 
 	(*f)[1][1][6] = ft_select_key_sup_del;
-	(*f)[4][1][6] = ft_select_key_sup_del;
+	(*f)[4][2][5] = ft_select_key_sup_del;
 }
 
 int    ft_select_tab_key_new(int (* ****f)(void))

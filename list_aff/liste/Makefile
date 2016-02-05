@@ -14,7 +14,7 @@ NAME = list.exe
 FLAG= -Wextra -Wall -Wpadded -Wstrict-prototypes -Wwrite-strings -Wconversion
 IDIR = ../../libft/libft.a
 LIB=-lncurses
-SRC = main_list.c src_liste/ft_select_liste.c src_liste/ft_select_liste_free.c\
+SRC =  main_list.c src_liste/ft_select_liste.c src_liste/ft_select_liste_free.c\
 		src_config_liste/ft_select_config_liste.c\
 		src_config_liste/ft_select_config_init.c\
 		src_config_liste/ft_select_config_free.c\
@@ -27,7 +27,7 @@ SRC = main_list.c src_liste/ft_select_liste.c src_liste/ft_select_liste_free.c\
 		src_tab_key/ft_select_tab_func_ctrl.c\
 		src_tab_key/ft_select_tab_func_mouv.c\
 		src_tab_key/ft_select_table.c
-
+		
 OBJ = $(SRC:.c=.o)
 
 all : $(NAME)
