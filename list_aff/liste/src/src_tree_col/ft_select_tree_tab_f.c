@@ -50,7 +50,12 @@ static void ft_putstr_s_name_reverse_video(const char *s, int _pa)
     //  static int i = 0;
     const char *res;
 
+    //underligne off
+    if ((res = tgetstr("ue", NULL)) == NULL)
+	return (-1);
+    ft_putstr(res);
     // i++;
+    //reverse on
     if ((res = tgetstr("mr", NULL)) == NULL)
 	return (-1);
    ft_putstr(res);
@@ -73,7 +78,7 @@ static void ft_putstr_s_name_underligne(const char *s, int _pa)
     // i++;
 //  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
     ft_putstr(s);
-    ft_cancel_puts_mode();
+      ft_cancel_puts_mode();
     ft_putstr_space(_pa);
     return ;
 }

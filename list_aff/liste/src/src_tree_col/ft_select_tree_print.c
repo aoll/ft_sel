@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../inc/ft_select_tree_col.h"
-
+#include <time.h>
 /*
 static void	ft_putstr_space(int pad)
 {
@@ -44,7 +44,8 @@ void		ft_select_tree_print(t_tree_col *t_t_c, const t_config_liste *t_c_l, void 
     int j;
     //t_liste **ptr_tab;
     
-
+    //  printf("etat == %d\n", t_t_c->ptr_curseur->si_etat);
+    //sleep(1);
     //ptr_tab = t_t_c->ptr_tab;
     //printf("%s\n", "------ tree----print------");
     ck = 0;

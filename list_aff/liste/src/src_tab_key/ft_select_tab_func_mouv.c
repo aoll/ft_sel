@@ -12,7 +12,7 @@
 
 #include "../../inc/ft_select_tab_key.h"
 
-static void	ft_key_change_etat(t_tree_col **t_t_c)
+void	ft_key_change_etat(t_tree_col **t_t_c)
 {
 	if ((*t_t_c)->ptr_curseur->si_etat == 3)
 	    (*t_t_c)->ptr_curseur->si_etat = 1;

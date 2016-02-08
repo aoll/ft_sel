@@ -135,7 +135,7 @@ int	ft_select_kernel(const int ac, const char **av)
 			    //
 			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
 			    if (f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c) == 0)
-			    ck++;
+				ck++;
 			    free (buff);
 			    buff = ft_strnew(10000);
 			    loop = 0;

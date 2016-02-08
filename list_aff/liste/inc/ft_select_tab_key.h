@@ -31,6 +31,8 @@ int    ft_select_table_0(char *s);
 int    ft_select_table_1(char *s);
 int    ft_select_table_2(char *s);
 
+void	ft_key_change_etat(t_tree_col **t_t_c);
+
 int     ft_select_key_up(t_config_liste **t_c_l, t_tree_col **t_t_c);
 int     ft_select_key_down(t_config_liste **t_c_l, t_tree_col **t_t_c);
 int     ft_select_key_right(t_config_liste **t_c_l, t_tree_col **t_t_c);
