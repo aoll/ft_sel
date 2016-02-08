@@ -33,7 +33,6 @@ int		ft_select_key_up(t_config_liste **t_c_l, t_tree_col **t_t_c)
 	(*t_t_c)->ptr_curseur->si_etat = 3;
     else
 	(*t_t_c)->ptr_curseur->si_etat = 2;
-    //NIMPORTE QUOI !!!
    
     if ((*t_t_c)->ptr_curseur->si_end == 1)
     	(*t_t_c)->x_curseur = (*t_c_l)->i_nb_col - (*t_c_l)->i_nb_col_aff;
@@ -77,10 +76,8 @@ int	ft_select_key_right(t_config_liste **t_c_l, t_tree_col **t_t_c)
 {
     int i;
     int x_col;
-    int ck;
     
     i = 0;
-    ck = 0;
     if (!*t_c_l || !*t_t_c)
 	return (-1);
     if ((*t_c_l)->i_nb_col == 1)
@@ -115,8 +112,8 @@ int	ft_select_key_right(t_config_liste **t_c_l, t_tree_col **t_t_c)
 		{
 		    if ((*t_t_c)->ptr_curseur->si_end == 1)
 			break;
-		(*t_t_c)->ptr_curseur = (*t_t_c)->ptr_curseur->n;
-		i++;
+		    (*t_t_c)->ptr_curseur = (*t_t_c)->ptr_curseur->n;
+		    i++;
 		}
 	}
 
@@ -127,7 +124,8 @@ int	ft_select_key_right(t_config_liste **t_c_l, t_tree_col **t_t_c)
   
     if ((*t_t_c)->ptr_curseur->i_index_col >= (*t_t_c)->x_curseur + (*t_c_l)->i_nb_col_aff)
 	(*t_t_c)->x_curseur = (*t_t_c)->x_curseur + (*t_c_l)->i_nb_col_aff;
-    
+    if ((*t_t_c)->ptr_curseur->i_index_col == (*t_c_l)->i_nb_col - 1) // a rajouter pour le rigth actuelement il affichera la derniere colonne seule
+    	(*t_t_c)->x_curseur = (*t_c_l)->i_nb_col - (*t_c_l)->i_nb_col_aff;
     //    if ((*t_t_c)->ptr_curseur->si_start == 1)
     //
     //(*t_t_c)->x_curseur++;
@@ -140,10 +138,62 @@ int	ft_select_key_right(t_config_liste **t_c_l, t_tree_col **t_t_c)
 
 int	ft_select_key_left(t_config_liste **t_c_l, t_tree_col **t_t_c)
 {
+    int i;
+    int ck;
+
     if (!*t_c_l || !*t_t_c)
 	return (-1);
     if ((*t_c_l)->i_nb_col == 1)
 	return (0);
     ft_key_change_etat(t_t_c);
+    i = 0;
+    ck = 0;
+
+    if ((*t_t_c)->ptr_curseur->i_index_col == 0)
+	{
+	    while ((*t_t_c)->ptr_curseur->p->i_index_col == 0)
+		{
+		    (*t_t_c)->ptr_curseur = (*t_t_c)->ptr_curseur->p;
+		    i++;
+		}
+	    while ((*t_t_c)->ptr_curseur->p->i_index_col == (*t_c_l)->i_nb_col - 1)
+		{
+		    (*t_t_c)->ptr_curseur = (*t_t_c)->ptr_curseur->p;
+		}
+	    while (i)
+		{
+		    if ((*t_t_c)->ptr_curseur->si_end == 1)
+			    break;
+		    (*t_t_c)->ptr_curseur = (*t_t_c)->ptr_curseur->n;
+		    i--;
+		}
+	}
+    else
+	{
+	    if ((*t_t_c)->ptr_curseur->si_end == 1)
+		ck++;
+	    while (i < (*t_c_l)->i_nb_ligne_col )
+		{
+		    if ((*t_t_c)->ptr_curseur->si_end == 1)
+			if (!ck)
+			    break;
+		    (*t_t_c)->ptr_curseur = (*t_t_c)->ptr_curseur->p;
+		    i++;
+		}
+	}
+    if ((*t_t_c)->ptr_curseur->si_etat == 1)
+	(*t_t_c)->ptr_curseur->si_etat = 3;
+    else
+	(*t_t_c)->ptr_curseur->si_etat = 2;
+   
+    if ((*t_t_c)->ptr_curseur->si_end == 1)
+    	(*t_t_c)->x_curseur = (*t_c_l)->i_nb_col - (*t_c_l)->i_nb_col_aff;
+    if ((*t_t_c)->ptr_curseur->i_index_col == (*t_c_l)->i_nb_col - 1) // a rajouter pour le rigth actuelement il affichera la derniere colonne seule
+    	(*t_t_c)->x_curseur = (*t_c_l)->i_nb_col - (*t_c_l)->i_nb_col_aff;
+    if ((*t_t_c)->ptr_curseur->i_index_col < (*t_t_c)->x_curseur)
+	(*t_t_c)->x_curseur = (*t_t_c)->x_curseur - (*t_c_l)->i_nb_col_aff; // +1
+    if ((*t_t_c)->x_curseur < 0)
+	(*t_t_c)->x_curseur = 0;
+
     return (0);
 }
