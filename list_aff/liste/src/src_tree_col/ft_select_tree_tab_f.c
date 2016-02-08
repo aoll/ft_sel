@@ -56,7 +56,7 @@ static void ft_putstr_s_name_reverse_video(const char *s, int _pa)
    ft_putstr(res);
 //  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
     ft_putstr(s);
-    //ft_cancel_puts_mode();
+    ft_cancel_puts_mode();
     ft_putstr_space(_pa);
     return ;
 }

@@ -12,27 +12,36 @@
 
 #include "../../inc/ft_select_tab_key.h"
 
-int	ft_select_key_return(void)
+int	ft_select_key_return(t_config_liste **t_c_l, t_tree_col **t_t_c)
 {
     ft_putstr("return\n");
-	return (1);
+    if (!*t_c_l || !*t_t_c)
+	return (-1);
+    return (0);
 }
 
-int	ft_select_key_space(void)
+int	ft_select_key_space(t_config_liste **t_c_l, t_tree_col **t_t_c)
 {
 	ft_putstr("SPACE\n");
-	return (1);
-}
-
-int	ft_select_key_echap(void)
-{
-    ft_putstr("ECHAP");
+	if (!*t_c_l || !*t_t_c)
+	    return (-1);
 	return (0);
 }
 
-int	ft_select_key_sup_del(void)
+int	ft_select_key_echap(t_config_liste **t_c_l, t_tree_col **t_t_c)
 {
+    if (!*t_c_l || !*t_t_c)
+	return (-1);
+    ft_putstr("ECHAP");
+    exit(0); // doit retourner un int qui freera toutes les strucs/listes en cours!!
+	return (0);
+}
+
+int	ft_select_key_sup_del(t_config_liste **t_c_l, t_tree_col **t_t_c)
+{
+    if (!*t_c_l || !*t_t_c)
+	return (-1);
     ft_putstr("DEL");
-	return (1);
+    return (0);
 }
 

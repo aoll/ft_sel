@@ -50,29 +50,30 @@ int	ft_select_ck_size_screen(t_config_liste **t_c_l)
 int	ft_select_kernel(const int ac, const char **av)
 {
 	t_liste			*l;
-	t_config_liste	*c_l;
+	t_config_liste	*t_c_l;
 	t_tree_col	*t_t_c;
 	void	(**t)(const char *, int _pa);
-	int	(****f)(void);//(int z, int y, int x);
+	int	(****f)(t_config_liste **t_c_l, t_tree_col **t_t_c);//(int z, int y, int x);
 	int ck;
 	char *buff;
-	t_key *key;
+	//	t_key *key;
 	int size_screen;
-
+	/*
 	if (!(key = malloc(sizeof(t_key))))
 	    return (0);
-	if ((l = ft_select_liste((const int)(ac),\
+	*/
+	    if ((l = ft_select_liste((const int)(ac),			\
 						(const char **)(av))) == NULL)
 		return (0);
 
-	if ((c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
+	if ((t_c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
 	    return (0);
 
-	if (!ft_select_config_init(&c_l))
+	if (!ft_select_config_init(&t_c_l))
 		ft_putstr("Error: terminal to small\n");
-//	ft_p_t_c(c_l); // print verif
+//	ft_p_t_c(t_c_l); // print verif
 
-	if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)c_l)))
+	if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
 		return (0);
 	ft_select_tree_tab_f(&t);
 
@@ -81,42 +82,61 @@ int	ft_select_kernel(const int ac, const char **av)
 		return (0);
 /*
 	f[1][1][1]();
-	ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)c_l, t);
+	ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)t_c_l, t);
 */ //a virer!!
+	/*	
 	ft_putstr("\e[1;1H\e[2J");
+	ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
+	//ft_select_tree_free(&t_t_c); // return 0 si pas alloue
+	ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
+	ft_putstr("\e[1;1H\e[2J");
+	ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
+	return (0);
+	*/
+
 	ck = 1;
 	buff = ft_strnew(3);
 	//	while (1 == 1)
 	while (1 == 1)
 	    {
-		
-		if (ft_select_ck_size_screen(&c_l))
+		if (ft_select_ck_size_screen(&t_c_l))
 		    {
-			ft_putstr("SIZE\n");// debug
-			if (!ft_select_config_init(&c_l))
+			//	ft_putstr("SIZE\n");// debug
+			// t_c_l a FREE
+			if (!ft_select_config_init(&t_c_l))
 			    {
 				ft_putstr("Error: terminal to small\n");
 				return (0);
 			    }
 			ck++;
 			ft_select_tree_free(&t_t_c); // return 0 si pas alloue
-			if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)c_l)))
+			if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
 			    return (0);
 		    }
+	 
 		if (ck)
 		    {
 			ft_putstr("\e[1;1H\e[2J");
-			ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)c_l, t);
+			ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
 			ck = 0;
 		    }
 		if (read(0, buff, 3) > 0)
-		    {
-			f[ft_select_table_0(&key, buff)][ft_select_table_1(&key, buff)][ft_select_table_2(&key, buff)]();
+		    {/*
+			// A CHANGER PAS DE NORMAL DE FREE ET DE DEVOIR REENITIALISER LA LE TABLEAU DE LISTE
+			if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
+			    return (0); // PAS NORMAL !!! PBS DANS LA FOCNTION DE PRINT AVEC LES ADRESSES AU LIEU DE SEULEMENT\
+			//PARCOURIR LA LISTE ET LAFICHER BOUGE LADRESSE DE LA LISTE !!!!!
+			*/
+			//
+			//
+			ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
+			if (f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c) == 0)
+			    ck++;
 			buff = ft_strnew(3);
 		    }
 	    }
 	ft_select_liste_free(&l); // return 0 si pas alloue
-	ft_select_config_free(&c_l); // return 0 si pas alloue
+	ft_select_config_free(&t_c_l); // return 0 si pas alloue
 	ft_select_tree_free(&t_t_c); // return 0 si pas alloue
 	ft_select_tree_tab_f_free(&t); // return 0 si pas alloue
 

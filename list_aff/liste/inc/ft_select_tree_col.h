@@ -24,10 +24,14 @@ struct	s_tree_col
 {
     t_liste **ptr_tab;
     t_liste *ptr_curseur;
+    int x_curseur;
+    char _pa[4];
 };
 
 t_tree_col      *ft_select_tree_col_new(t_liste **liste, const t_config_liste *t_c_l);
-void		ft_select_tree_print(const t_liste **ptr_tab, const t_config_liste *t_c_l, void (**t)(const char *s, int _pa));
+int     ft_tree_col_init_tab(t_liste ***ptr_tab, t_liste **liste, int i_nb_l_col, int i_nb_col);
+
+void		ft_select_tree_print(t_tree_col *t_t_c, const t_config_liste *t_c_l, void (**t)(const char *s, int _pa));
 
 void	ft_select_tree_tab_f(void (***t)(const char *s, int _pa));
 

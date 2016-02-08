@@ -1,0 +1,4 @@
+//en cas de resize++ et curseur sur derniere colonne :: affiche comme la config precendte a rechecker !!!
+/// cest good 
+
+a checker le padding pour la lecture des touche ?? solution possible instaurer un compteur et ne rentrer dans le read toutes les 10 boucles par exemple

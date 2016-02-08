@@ -12,13 +12,15 @@
 
 #include "../../inc/ft_select_tab_key.h"
 
-static int	ft_p_test(void)
+static int	ft_p_test(t_config_liste **t_c_l, t_tree_col **t_t_c)
 {
+    if (!*t_c_l || !*t_t_c)
+	return (-1);
     ft_putstr("PAS ASSIGNE");
-	return (0);
+    return (1);
 }
 
-static void    ft_select_tab_key_init(int (* ****f)(void))
+static void    ft_select_tab_key_init(int (* ****f)(t_config_liste **t_c_l, t_tree_col **t_t_c))
 {
 	(*f)[1][1][1] = ft_select_key_up;
 	(*f)[1][1][2] = ft_select_key_down;
@@ -34,7 +36,7 @@ static void    ft_select_tab_key_init(int (* ****f)(void))
 	(*f)[4][2][5] = ft_select_key_sup_del;
 }
 
-int    ft_select_tab_key_new(int (* ****f)(void))
+int    ft_select_tab_key_new(int (* ****f)(t_config_liste **t_c_l, t_tree_col **t_t_c))
 {
 	int z;
 	int y;

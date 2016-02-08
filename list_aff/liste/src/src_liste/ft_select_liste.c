@@ -23,6 +23,7 @@ static t_liste	*ft_liste_new(const char *s)
 	n->si_start = 0;
 	n->si_end = 0;
 	n->s_name = ft_strdup(s);
+	n->i_index_col = 0;
 	n->n = NULL;
 	n->p = NULL;
 	return (n);

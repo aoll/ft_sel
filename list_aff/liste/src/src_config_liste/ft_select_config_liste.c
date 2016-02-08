@@ -29,6 +29,8 @@ int					ft_length_str_liste_max(const t_liste *liste)
 		    break;
 		liste = liste->n;
 	}
+	// a changer definir une taille max!
+	// la troncature se fera au moment de laffichage !!
 	return (i_length + 5);
 }
 
@@ -65,6 +67,7 @@ t_config_liste		*ft_select_config_liste_new(const t_liste *liste)
 	n->i_nb_col = 0;
 	n->i_nb_ligne_col = 0;
 	n->i_nb_col_aff = 0;
-	n->i_index_col_aff = 0;
+	n->i_index_col_aff = 0; // devenu obsolette ??
+ //function pour savoir ou se trouve le curseur dans la liste et par la meme ocasion son index_col 
 	return (n);
 }

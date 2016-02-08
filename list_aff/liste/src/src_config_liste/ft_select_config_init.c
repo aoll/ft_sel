@@ -40,7 +40,8 @@ int	ft_many_col(t_config_liste **t_c_l)
 	    t->i_nb_col_aff = t->i_nb_col;
 	else
 	    t->i_nb_col_aff = (int)t->si_x_term / t->i_l_str_max;
-	t->i_index_col_aff = 0;	
+	t->i_index_col_aff = 0; //devenu obsolette ?? 
+//function qui va chercher dans liste la position du curseur et son index_col	
 	return (1);
 }
 

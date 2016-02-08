@@ -18,11 +18,12 @@
 typedef struct s_liste	t_liste;
 struct	s_liste
 {
-	int			i_length;
-	short int	si_etat;
-	short int	si_start;
+    int i_index_col;
+    int			i_length;
+    short int	si_etat;
+    short int	si_start;
     short int	si_end;
-    char	_pa[6];
+    char	_pa[2];
 	char		*s_name;
 	t_liste		*n;
 	t_liste		*p;
