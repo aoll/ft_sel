@@ -58,6 +58,8 @@ int	ft_select_kernel(const int ac, const char **av)
 	char *buff;
 	//	t_key *key;
 	int size_screen;
+	int loop;
+
 	/*
 	if (!(key = malloc(sizeof(t_key))))
 	    return (0);
@@ -95,8 +97,9 @@ int	ft_select_kernel(const int ac, const char **av)
 	*/
 
 	ck = 1;
-	buff = ft_strnew(3);
+	buff = ft_strnew(10000);
 	//	while (1 == 1)
+	loop = 0;
 	while (1 == 1)
 	    {
 		if (ft_select_ck_size_screen(&t_c_l))
@@ -120,20 +123,24 @@ int	ft_select_kernel(const int ac, const char **av)
 			ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
 			ck = 0;
 		    }
-		if (read(0, buff, 3) > 0)
-		    {/*
-			// A CHANGER PAS DE NORMAL DE FREE ET DE DEVOIR REENITIALISER LA LE TABLEAU DE LISTE
-			if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
-			    return (0); // PAS NORMAL !!! PBS DANS LA FOCNTION DE PRINT AVEC LES ADRESSES AU LIEU DE SEULEMENT\
-			//PARCOURIR LA LISTE ET LAFICHER BOUGE LADRESSE DE LA LISTE !!!!!
-			*/
-			//
-			//
-			ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
-			if (f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c) == 0)
+		if (loop > 500000 )
+		    if (read(0, buff, 10000) > 0)
+			{/*
+			 // A CHANGER PAS DE NORMAL DE FREE ET DE DEVOIR REENITIALISER LA LE TABLEAU DE LISTE
+			 if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
+			 return (0); // PAS NORMAL !!! PBS DANS LA FOCNTION DE PRINT AVEC LES ADRESSES AU LIEU DE SEULEMENT \
+			 //PARCOURIR LA LISTE ET LAFICHER BOUGE LADRESSE DE LA LISTE !!!!!
+			 */
+			    //
+			    //
+			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
+			    if (f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c) == 0)
 			    ck++;
-			buff = ft_strnew(3);
+			    free (buff);
+			    buff = ft_strnew(10000);
+			    loop = 0;
 		    }
+		loop++;
 	    }
 	ft_select_liste_free(&l); // return 0 si pas alloue
 	ft_select_config_free(&t_c_l); // return 0 si pas alloue

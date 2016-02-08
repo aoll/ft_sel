@@ -23,9 +23,9 @@ static void	ft_next_nb_col(t_liste **l, int i_nb_l_col, int index_col)
     x = 0;
     while (x < i_nb_l_col)
 	{
+	    (*l)->i_index_col = index_col;
 	    if ((*l)->si_end == 1)
 		break;
-	    (*l)->i_index_col = index_col;
 	    (*l) = (*l)->n;
 	    x++;
 	}
