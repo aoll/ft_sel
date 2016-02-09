@@ -60,7 +60,9 @@ int	ft_select_kernel(const int ac, const char **av)
 	int size_screen;
 	int loop;
 	int sup;
-	    const char      *name_term;// = getenv("TERM");                                                                                        
+	    const char      *name_term;// = getenv("TERM");                                                                                   
+	    int ctrl_z = 0;
+     
     struct termios term;
     //  void *f = ft_putchar;
     const char *res;
@@ -80,8 +82,8 @@ int	ft_select_kernel(const int ac, const char **av)
     //ce fera a chaque touche presse sans attendre que la touche entree soit press                                                         
     term.c_lflag &= ~(ICANON);
     term.c_lflag &= ~(ECHO);
-    term.c_cc[VMIN] = 0; // ??                                                                                                             
-    term.c_cc[VTIME] = 0; // ??                                                                                                            
+    term.c_cc[VMIN] = 0; 
+    term.c_cc[VTIME] = 0;
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return (-1);
 
@@ -151,15 +153,18 @@ int	ft_select_kernel(const int ac, const char **av)
 			    return (0);
 		    }
 	 
-		if (ck)// || loop == 250000)
+		if (ck || term.c_cc[VTIME] == 1 || ctrl_z > 1000000)
 		    {
-			//ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
+			term.c_cc[VTIME] = 0;
+			if (ctrl_z > 1000000)
+			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
 			ft_putstr("\e[1;1H\e[2J");
 			 printf("44 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 			ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
 			ck = 0;
+			ctrl_z = 0;
 		    }
-		if (loop > 500000 )
+		if (loop > 500000  && term.c_cc[VTIME] == 0)
 		    if (read(0, buff, 10000) > 0)
 			{/*
 			 // A CHANGER PAS DE NORMAL DE FREE ET DE DEVOIR REENITIALISER LA LE TABLEAU DE LISTE
@@ -224,6 +229,7 @@ int	ft_select_kernel(const int ac, const char **av)
 			    loop = 0;
 		    }
 		loop++;
+		ctrl_z++;
 	    }
 	ft_select_liste_free(&l); // return 0 si pas alloue
 	ft_select_config_free(&t_c_l); // return 0 si pas alloue
@@ -270,8 +276,8 @@ void ft_p(int a)
     //ce fera a chaque touche presse sans attendre que la touche entree soit press                                                         
     term.c_lflag &= ~(ICANON);
     term.c_lflag &= ~(ECHO);
-    term.c_cc[VMIN] = 0; // ??                                                                                                             
-    term.c_cc[VTIME] = 0; // ??                                                                                                            
+    term.c_cc[VMIN] = 0; 
+    term.c_cc[VTIME] = 0;
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return (-1);
 }
