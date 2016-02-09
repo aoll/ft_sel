@@ -59,6 +59,32 @@ int	ft_select_kernel(const int ac, const char **av)
 	//	t_key *key;
 	int size_screen;
 	int loop;
+	int sup;
+	    const char      *name_term;// = getenv("TERM");                                                                                        
+    struct termios term;
+    //  void *f = ft_putchar;
+    const char *res;
+
+    //signal ctrl+C
+    //  signal(2, SIG_IGN);
+
+    if ((name_term = getenv("TERM")) == NULL)
+	return (-1);
+    // 1 if success, 0 if there are no such entry, -1 if dqtqbqse term can't be found                                                      
+    //su gnu en passant un buffer null, UNIX le buffer doit etre alloue de 2048                                                            
+    if (tgetent(NULL, name_term) != 1)
+	return (-1);
+    if (tcgetattr(0, &term) == -1)
+	return (-1);
+    //terminal mode cannonique:: un read sur lentre standart                                                                               
+    //ce fera a chaque touche presse sans attendre que la touche entree soit press                                                         
+    term.c_lflag &= ~(ICANON);
+    term.c_lflag &= ~(ECHO);
+    term.c_cc[VMIN] = 0; // ??                                                                                                             
+    term.c_cc[VTIME] = 0; // ??                                                                                                            
+    if (tcsetattr(0, TCSADRAIN, &term) == -1)
+	return (-1);
+
 
 	/*
 	if (!(key = malloc(sizeof(t_key))))
@@ -102,6 +128,14 @@ int	ft_select_kernel(const int ac, const char **av)
 	loop = 0;
 	while (1 == 1)
 	    {
+		/*
+		term.c_lflag &= ~(ICANON);
+		term.c_lflag &= ~(ECHO);
+		term.c_cc[VMIN] = 0; // ??                                                                                                    
+		term.c_cc[VTIME] = 0; // ??                                                                                                   
+		if (tcsetattr(0, TCSADRAIN, &term) == -1)
+		    return (-1);
+		*/
 		if (ft_select_ck_size_screen(&t_c_l))
 		    {
 			//	ft_putstr("SIZE\n");// debug
@@ -117,9 +151,11 @@ int	ft_select_kernel(const int ac, const char **av)
 			    return (0);
 		    }
 	 
-		if (ck)
+		if (ck)// || loop == 250000)
 		    {
+			//ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
 			ft_putstr("\e[1;1H\e[2J");
+			 printf("44 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 			ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
 			ck = 0;
 		    }
@@ -134,8 +170,55 @@ int	ft_select_kernel(const int ac, const char **av)
 			    //
 			    //
 			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
-			    if (f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c) == 0)
+			    if ((sup = f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c)) == 0)
 				ck++;
+			    if (sup == 2 || sup == 3)
+				{
+				    if (sup == 3) // pourrait se faire avec une fonction qui prend sup et ladresse de liste en parametre, retourne sup , mais avant si sup == 3 sup liste.0
+					{
+					    t_liste *tmp;
+
+					    tmp = l;
+					    l = l->n;
+					    l->p->p->n = l;
+					    l->p = l->p->p;
+					    l->si_start = 1;
+					    if (l->si_etat == 1)
+						l->si_etat = 3;
+					    else
+						l->si_etat = 2;
+					    free(tmp->s_name);
+					    tmp->s_name = NULL;
+					    free (tmp);
+					    tmp = NULL; // doit etre free de linterieur !!
+					}
+				    /*
+				    printf("\n%s\n", "-----------------------------------------------");
+				    while (l)
+					{
+					    printf("%s\n", l->s_name);
+					    if (l->si_end == 1)
+						break;
+					    l = l->n;
+					}
+				    exit (0);
+				    */
+				    if ((t_c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
+					return (0);
+				    printf("00 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				    if (!ft_select_config_init(&t_c_l))
+					{
+					    ft_putstr("Error: terminal to small\n");
+					    return (0);
+					}
+				    ck++;
+				    printf("11 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				    ft_select_tree_free(&t_t_c); // return 0 si pas alloue
+				    printf("22 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				    if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
+				    	return (0);
+				     printf("33 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				}
 			    free (buff);
 			    buff = ft_strnew(10000);
 			    loop = 0;
@@ -165,9 +248,9 @@ int	ft_select_kernel(const int ac, const char **av)
 
 //++av , ac - 1//
 
-int	main(int ac, char **av)
+void ft_p(int a)
 {
-    const char      *name_term;// = getenv("TERM");                                                                                        
+	    const char      *name_term;// = getenv("TERM");                                                                                        
     struct termios term;
     //  void *f = ft_putchar;
     const char *res;
@@ -191,10 +274,17 @@ int	main(int ac, char **av)
     term.c_cc[VTIME] = 0; // ??                                                                                                            
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return (-1);
+}
 
+int	main(int ac, char **av)
+{
+    int num_sig = 18; // fg;
+    void    (*f)(int);
+    
+    f = (ft_p);
 
-
-	if (!(ft_select_kernel((const int)(ac - 1), (const char **)++av)))
+    signal(num_sig, f);
+    if (!(ft_select_kernel((const int)(ac - 1), (const char **)++av)))
 		return (0);
 //	printf("align %zu\n", sizeof(t_liste));
 //	ft_putstr("HELLO\n");

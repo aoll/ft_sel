@@ -12,28 +12,6 @@
 
 #include "../../inc/ft_select_tree_col.h"
 #include <time.h>
-/*
-static void	ft_putstr_space(int pad)
-{
-	while (pad)
-	{
-		ft_putchar(' ');
-		pad--;
-	}
-	return ;
-}
-
-static void	ft_putstr_s_name(const t_liste *l, const t_config_liste *t_c_l)
-{
-	static int i = 0;
-
-	i++;
-//	printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
-	ft_putstr(l->s_name);
-	ft_putstr_space(t_c_l->i_l_str_max - (int)ft_strlen(l->s_name));
-	return ;
-}
-*/
 
 void		ft_select_tree_print(t_tree_col *t_t_c, const t_config_liste *t_c_l, void (**t)(const char *s, int _pa))
 {
@@ -48,12 +26,16 @@ void		ft_select_tree_print(t_tree_col *t_t_c, const t_config_liste *t_c_l, void 
     //sleep(1);
     //ptr_tab = t_t_c->ptr_tab;
     //printf("%s\n", "------ tree----print------");
+    
+    if (t_t_c->ptr_curseur == NULL)
+	exit (0);
     ck = 0;
     i = 0;
     while (i < t_c_l->i_nb_ligne_col)
 	{
 	    //	    x = t_c_l->i_index_col_aff;
 	    x = t_t_c->x_curseur;
+	    //printf("C_CURSEUR :: %s\n", x);
 	    tmp = t_c_l->i_nb_col_aff;
 	    j = 0;
 	    //printf("INDEX_COL_PRINT ::%d\n", t_t_c->ptr_tab[0]->i_index_col); //debug
