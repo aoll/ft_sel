@@ -28,6 +28,17 @@ struct	s_tree_col
     char _pa[4];
 };
 
+typedef struct s_env t_env;
+struct s_env
+{
+    int ck;
+    int i;
+    int x;
+    int tmp;
+    int j;
+    char _pa[4];
+};
+
 t_tree_col      *ft_select_tree_col_new(t_liste **liste, const t_config_liste *t_c_l);
 int     ft_tree_col_init_tab(t_liste ***ptr_tab, t_liste **liste, int i_nb_l_col, int i_nb_col);
 

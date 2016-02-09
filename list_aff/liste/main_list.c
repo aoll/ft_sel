@@ -159,7 +159,7 @@ int	ft_select_kernel(const int ac, const char **av)
 			if (ctrl_z > 1000000)
 			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
 			ft_putstr("\e[1;1H\e[2J");
-			 printf("44 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+			 // printf("44 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 			ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
 			ck = 0;
 			ctrl_z = 0;
@@ -198,10 +198,10 @@ int	ft_select_kernel(const int ac, const char **av)
 					    tmp = NULL; // doit etre free de linterieur !!
 					}
 				    /*
-				    printf("\n%s\n", "-----------------------------------------------");
+				    // printf("\n%s\n", "-----------------------------------------------");
 				    while (l)
 					{
-					    printf("%s\n", l->s_name);
+					    // printf("%s\n", l->s_name);
 					    if (l->si_end == 1)
 						break;
 					    l = l->n;
@@ -210,19 +210,19 @@ int	ft_select_kernel(const int ac, const char **av)
 				    */
 				    if ((t_c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
 					return (0);
-				    printf("00 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				    // printf("00 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				    if (!ft_select_config_init(&t_c_l))
 					{
 					    ft_putstr("Error: terminal to small\n");
 					    return (0);
 					}
 				    ck++;
-				    printf("11 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				    // printf("11 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				    ft_select_tree_free(&t_t_c); // return 0 si pas alloue
-				    printf("22 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				    // printf("22 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				    if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
 				    	return (0);
-				     printf("33 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+				     // printf("33 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				}
 			    free (buff);
 			    buff = ft_strnew(10000);
@@ -239,7 +239,7 @@ int	ft_select_kernel(const int ac, const char **av)
 	return (1);
 }
 
-	//printf("z == %d, y == %d, x == %d\n", k->z, k->y, k->x);
+	//// printf("z == %d, y == %d, x == %d\n", k->z, k->y, k->x);
 		    /*
 			ft_putchar('|');
 			ft_putnbr(ft_select_table_0(&k, buff));
@@ -292,7 +292,7 @@ int	main(int ac, char **av)
     signal(num_sig, f);
     if (!(ft_select_kernel((const int)(ac - 1), (const char **)++av)))
 		return (0);
-//	printf("align %zu\n", sizeof(t_liste));
+//	// printf("align %zu\n", sizeof(t_liste));
 //	ft_putstr("HELLO\n");
 	return (0);
 }
