@@ -206,8 +206,20 @@ void ft_p(int a)
 }
 void	ft_pp(int a)
 {
-    //ft_putstr("\033[?1049l"); //recharge le svg du terminal
-    exit (0);
+    /*    struct termios term;
+ 
+    if (a != 20)
+	return ;
+    if (tcgetattr(0, &term) == -1)
+	return (-1);
+    term.c_lflag = (ICANON | ECHO);
+    if (tcsetattr(0, 0, &term) == -1)
+	return (-1);
+    */
+    // ft_putstr("\033[?1049l"); //recharge le svg du terminal
+    //exit (0);
+    
+    signal(20, SIG_DFL); //ctrl-z
 	return;
 }
 
@@ -219,8 +231,8 @@ int	main(int ac, char **av)
     f = (ft_p);
     ft_putstr("\033[?1049h\033[H"); //svg du terminal
     signal(num_sig, f);
-    //f = (ft_pp);
-    //signal(20, f); //ctrl-z
+    f = (ft_pp);
+    signal(20, f); //ctrl-z
     //signal ctrl+C
     //  signal(2, SIG_IGN);
 
