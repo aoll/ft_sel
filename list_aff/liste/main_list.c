@@ -49,99 +49,63 @@ int	ft_select_ck_size_screen(t_config_liste **t_c_l)
 
 int	ft_select_kernel(const int ac, const char **av)
 {
-	t_liste			*l;
-	t_config_liste	*t_c_l;
-	t_tree_col	*t_t_c;
-	void	(**t)(const char *, int _pa);
-	int	(****f)(t_config_liste **t_c_l, t_tree_col **t_t_c);//(int z, int y, int x);
-	int ck;
-	char *buff;
-	//	t_key *key;
-	int size_screen;
-	int loop;
-	int sup;
-	    const char      *name_term;// = getenv("TERM");                                                                                   
-	    int ctrl_z = 0;
-     
-    struct termios term;
-    //  void *f = ft_putchar;
-    const char *res;
+    t_liste			*l;
+    t_config_liste	*t_c_l;
+    t_tree_col	*t_t_c;
+    void	(**t)(const char *, int _pa);
+    int	(****f)(t_config_liste **t_c_l, t_tree_col **t_t_c);//(int z, int y, int x);
+    int ck;
+    char *buff;
+    //	t_key *key;
+    int size_screen;
+    int loop;
+    int sup;
+    const char      *name_term;// = getenv("TERM");                                                                                   
+    int ctrl_z = 0;
 
-    //signal ctrl+C
-    //  signal(2, SIG_IGN);
+/***************************************INIT--TERMIOS***************************************/	    
+    // PEUT SE FAIRE AVEC UNE FUNCTION PAR EX: int ft_select_termios_init(void);
+    struct termios term;
+    const char *res;
+    char *goto_str, *clear_str;
 
     if ((name_term = getenv("TERM")) == NULL)
 	return (-1);
-    // 1 if success, 0 if there are no such entry, -1 if dqtqbqse term can't be found                                                      
-    //su gnu en passant un buffer null, UNIX le buffer doit etre alloue de 2048                                                            
     if (tgetent(NULL, name_term) != 1)
 	return (-1);
     if (tcgetattr(0, &term) == -1)
 	return (-1);
-    //terminal mode cannonique:: un read sur lentre standart                                                                               
-    //ce fera a chaque touche presse sans attendre que la touche entree soit press                                                         
     term.c_lflag &= ~(ICANON);
     term.c_lflag &= ~(ECHO);
     term.c_cc[VMIN] = 0; 
     term.c_cc[VTIME] = 0;
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return (-1);
+    goto_str = tgetstr("cm", NULL);    
+    clear_str = tgetstr("cl", NULL);    
+/***************************************INIT--TERMIOS--end***************************************/
 
-
-	/*
-	if (!(key = malloc(sizeof(t_key))))
-	    return (0);
-	*/
-	    if ((l = ft_select_liste((const int)(ac),			\
-						(const char **)(av))) == NULL)
-		return (0);
-
-	if ((t_c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
-	    return (0);
-
-	if (!ft_select_config_init(&t_c_l))
-		ft_putstr("Error: terminal to small\n");
-//	ft_p_t_c(t_c_l); // print verif
-
-	if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
-		return (0);
-	ft_select_tree_tab_f(&t);
-
-
-	if (!(ft_select_tab_key_new(&f)))
-		return (0);
-/*
-	f[1][1][1]();
-	ft_select_tree_print((const t_liste**)t_t_c->ptr_tab, (const t_config_liste*)t_c_l, t);
-*/ //a virer!!
-	/*	
-	ft_putstr("\e[1;1H\e[2J");
-	ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
-	//ft_select_tree_free(&t_t_c); // return 0 si pas alloue
-	ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
-	ft_putstr("\e[1;1H\e[2J");
-	ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
+    /***************************************INIT--STRUCT***************************************/
+    if ((l = ft_select_liste((const int)(ac),			\
+			     (const char **)(av))) == NULL)
 	return (0);
-	*/
-
+    if ((t_c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
+	return (0);
+    if (!ft_select_config_init(&t_c_l))
+	ft_putstr("Error: terminal to small\n");
+    if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
+	return (0);
+    ft_select_tree_tab_f(&t);
+    if (!(ft_select_tab_key_new(&f)))
+	return (0);
+/***************************************INIT-END***************************************/
 	ck = 1;
 	buff = ft_strnew(10000);
-	//	while (1 == 1)
 	loop = 0;
 	while (1 == 1)
 	    {
-		/*
-		term.c_lflag &= ~(ICANON);
-		term.c_lflag &= ~(ECHO);
-		term.c_cc[VMIN] = 0; // ??                                                                                                    
-		term.c_cc[VTIME] = 0; // ??                                                                                                   
-		if (tcsetattr(0, TCSADRAIN, &term) == -1)
-		    return (-1);
-		*/
 		if (ft_select_ck_size_screen(&t_c_l))
 		    {
-			//	ft_putstr("SIZE\n");// debug
-			// t_c_l a FREE
 			if (!ft_select_config_init(&t_c_l))
 			    {
 				ft_putstr("Error: terminal to small\n");
@@ -152,28 +116,22 @@ int	ft_select_kernel(const int ac, const char **av)
 			if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
 			    return (0);
 		    }
-	 
-		if (ck || term.c_cc[VTIME] == 1 || ctrl_z > 1000000)
+		if (ck || ctrl_z > 1000000)
 		    {
-			term.c_cc[VTIME] = 0;
 			if (ctrl_z > 1000000)
 			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
-			ft_putstr("\e[1;1H\e[2J");
-			 // printf("44 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
+			ft_putstr(tgoto(goto_str, 0, 0));//, stdout);
+			//ft_putstr(clear_str);
+			//ft_putstr("\e[1;1H\e[2J"); //clear
+
 			ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
+
 			ck = 0;
 			ctrl_z = 0;
 		    }
 		if (loop > 500000  && term.c_cc[VTIME] == 0)
 		    if (read(0, buff, 10000) > 0)
-			{/*
-			 // A CHANGER PAS DE NORMAL DE FREE ET DE DEVOIR REENITIALISER LA LE TABLEAU DE LISTE
-			 if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
-			 return (0); // PAS NORMAL !!! PBS DANS LA FOCNTION DE PRINT AVEC LES ADRESSES AU LIEU DE SEULEMENT \
-			 //PARCOURIR LA LISTE ET LAFICHER BOUGE LADRESSE DE LA LISTE !!!!!
-			 */
-			    //
-			    //
+			{
 			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
 			    if ((sup = f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c)) == 0)
 				ck++;
@@ -197,32 +155,17 @@ int	ft_select_kernel(const int ac, const char **av)
 					    free (tmp);
 					    tmp = NULL; // doit etre free de linterieur !!
 					}
-				    /*
-				    // printf("\n%s\n", "-----------------------------------------------");
-				    while (l)
-					{
-					    // printf("%s\n", l->s_name);
-					    if (l->si_end == 1)
-						break;
-					    l = l->n;
-					}
-				    exit (0);
-				    */
 				    if ((t_c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
 					return (0);
-				    // printf("00 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				    if (!ft_select_config_init(&t_c_l))
 					{
 					    ft_putstr("Error: terminal to small\n");
 					    return (0);
 					}
 				    ck++;
-				    // printf("11 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				    ft_select_tree_free(&t_t_c); // return 0 si pas alloue
-				    // printf("22 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				    if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
 				    	return (0);
-				     // printf("33 == %s\n", "fijhej ghfhjgfjqgjhgfjgvqjhvfgjhbvjhfvjwhvfehjvwehfvfqejfvbejhqvfjhqevfhjqvn");
 				}
 			    free (buff);
 			    buff = ft_strnew(10000);
@@ -239,41 +182,21 @@ int	ft_select_kernel(const int ac, const char **av)
 	return (1);
 }
 
-	//// printf("z == %d, y == %d, x == %d\n", k->z, k->y, k->x);
-		    /*
-			ft_putchar('|');
-			ft_putnbr(ft_select_table_0(&k, buff));
-			ft_putchar(':');
-			ft_putnbr(ft_select_table_1(&k, buff));
-			ft_putchar(':');
-			ft_putnbr(ft_select_table_2(&k, buff));
-			ft_putchar('|');	
-		    */
-		    //f[2][1][3]();
-
-
-//++av , ac - 1//
-
 void ft_p(int a)
 {
-	    const char      *name_term;// = getenv("TERM");                                                                                        
+    const char      *name_term;// = getenv("TERM");                                                                                        
     struct termios term;
-    //  void *f = ft_putchar;
     const char *res;
 
+    ft_putstr("\e[1;1H\e[2J"); //clear
     //signal ctrl+C
     //  signal(2, SIG_IGN);
-
     if ((name_term = getenv("TERM")) == NULL)
 	return (-1);
-    // 1 if success, 0 if there are no such entry, -1 if dqtqbqse term can't be found                                                      
-    //su gnu en passant un buffer null, UNIX le buffer doit etre alloue de 2048                                                            
     if (tgetent(NULL, name_term) != 1)
 	return (-1);
     if (tcgetattr(0, &term) == -1)
 	return (-1);
-    //terminal mode cannonique:: un read sur lentre standart                                                                               
-    //ce fera a chaque touche presse sans attendre que la touche entree soit press                                                         
     term.c_lflag &= ~(ICANON);
     term.c_lflag &= ~(ECHO);
     term.c_cc[VMIN] = 0; 
@@ -281,15 +204,26 @@ void ft_p(int a)
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return (-1);
 }
+void	ft_pp(int a)
+{
+    //ft_putstr("\033[?1049l"); //recharge le svg du terminal
+    exit (0);
+	return;
+}
 
 int	main(int ac, char **av)
 {
     int num_sig = 18; // fg;
     void    (*f)(int);
-    
+    // ne pas oublier diniber le ctrl-c == 2;
     f = (ft_p);
-
+    ft_putstr("\033[?1049h\033[H"); //svg du terminal
     signal(num_sig, f);
+    //f = (ft_pp);
+    //signal(20, f); //ctrl-z
+    //signal ctrl+C
+    //  signal(2, SIG_IGN);
+
     if (!(ft_select_kernel((const int)(ac - 1), (const char **)++av)))
 		return (0);
 //	// printf("align %zu\n", sizeof(t_liste));
