@@ -16,16 +16,9 @@
 #include "../../../libft/libft.h"
 #include "ft_select_config_liste.h"
 #include "ft_select_tree_col.h"
-/*
-typedef struct s_key	t_key;
-struct	s_key
-{
-	int z;
-	int y;
-	int x;
-};
-*/
+
 int	ft_select_tab_key_new(int (* ****f)(t_config_liste **t_c_l, t_tree_col **t_t_c));
+int	ft_select_tab_key_free(int (* ****f)(t_config_liste **t_c_l, t_tree_col **t_t_c));
 
 int    ft_select_table_0(char *s);
 int    ft_select_table_1(char *s);

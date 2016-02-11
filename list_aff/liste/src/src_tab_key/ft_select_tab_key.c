@@ -69,3 +69,40 @@ int    ft_select_tab_key_new(int (* ****f)(t_config_liste **t_c_l, t_tree_col **
 	ft_select_tab_key_init(f);
 	return (1);
 }
+
+int    ft_select_tab_key_free(int (* ****f)(t_config_liste **t_c_l, t_tree_col **t_t_c))
+{
+	int z;
+	int y;
+	int x;
+	
+	z = 0;
+	y = 0;
+	x = 0;
+	while (z < 6)
+	{
+		
+		y = 0;
+		while (y < 3)
+		{
+		    //	if (!(
+		    //		return (0);
+			x = 0;
+			while (x < 7)
+			{
+			    //free((f)[z][y][x]);
+			    (*f)[z][y][x] = NULL;
+			    x++;
+			}
+			free((*f)[z][y]);
+			(*f)[z][y] = NULL;
+			y++;
+		}
+		free((*f)[z]);
+		(*f)[z] = NULL;
+		z++;
+	}
+	free(*f);
+	(*f) = NULL;
+	return (1);
+}
