@@ -23,10 +23,13 @@ static void	ft_print_init_loop(const t_tree_col *t_t_c, const t_config_liste *t_
 
 static void	ft_print_call_tab_f(t_tree_col *t_t_c, const t_config_liste *t_c_l, void (**t)(const char *s, int _pa), t_env *e, int ck)
 {
+    if (open(t_t_c->ptr_tab[e->x]->s_name, O_DIRECTORY) > 0)
+	ft_putstr("\e[31m");
     if (t_t_c->ptr_tab[e->x]->s_name)
 	t[t_t_c->ptr_tab[e->x]->si_etat]((const char*)t_t_c->ptr_tab[e->x]->s_name, t_c_l->i_l_str_max - (int)ft_strlen(t_t_c->ptr_tab[e->x]->s_name));
     if (ck == 1)
 	e->ck = 1;
+    ft_putstr("\e[0m");
 	return;
 }
 

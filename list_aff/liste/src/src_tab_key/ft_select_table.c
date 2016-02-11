@@ -14,6 +14,8 @@
 
 int	ft_select_table_0(char *s)
 {
+    // printf("%d, %d, %d\n", s[0], s[1], s[2]);
+    // exit(0);
     	if (s[0] == 27)
 		return(1);
 	else if (s[0] == 10)

@@ -69,6 +69,9 @@ int	ft_select_kernel(const int ac, const char **av)
     const char *res;
     char *goto_str, *clear_str;
 
+  
+  
+  
     if ((name_term = getenv("TERM")) == NULL)
 	return (-1);
     if (tgetent(NULL, name_term) != 1)
@@ -122,7 +125,7 @@ int	ft_select_kernel(const int ac, const char **av)
 			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
 			ft_putstr(tgoto(goto_str, 0, 0));//, stdout);
 			//ft_putstr(clear_str);
-			//ft_putstr("\e[1;1H\e[2J"); //clear
+			ft_putstr("\e[1;1H\e[2J"); //clear
 
 			ft_select_tree_print(t_t_c, (const t_config_liste*)t_c_l, t);
 
@@ -134,9 +137,10 @@ int	ft_select_kernel(const int ac, const char **av)
 			{
 			    ft_tree_col_init_tab(&(t_t_c->ptr_tab), &l, t_c_l->i_nb_ligne_col, t_c_l->i_nb_col);
 			    if ((sup = f[ft_select_table_0(buff)][ft_select_table_1(buff)][ft_select_table_2(buff)](&t_c_l, &t_t_c)) == 0)
-				ck++;
+			    	ck++;
 			    if (sup == 2 || sup == 3)
 				{
+				    
 				    if (sup == 3) // pourrait se faire avec une fonction qui prend sup et ladresse de liste en parametre, retourne sup , mais avant si sup == 3 sup liste.0
 					{
 					    t_liste *tmp;
@@ -155,8 +159,24 @@ int	ft_select_kernel(const int ac, const char **av)
 					    free (tmp);
 					    tmp = NULL; // doit etre free de linterieur !!
 					}
+				    /*
+				        ft_putstr("\e[1;1H\e[2J"); //clear
+				    printf("%s\n", "---------------------------------------------");
+				    while(l)
+					{
+					    printf("NAME : %s, START : %d, END : %d\n", l->s_name, l->si_start, l->si_end);
+					    if (l->n->si_start == 1)
+						break;
+					    
+					    l = l->n;
+					    
+					}
+				    exit(0);
+				    */
+				    
 				    if ((t_c_l = ft_select_config_liste_new((const t_liste*)(l))) == NULL)
 					return (0);
+				    
 				    if (!ft_select_config_init(&t_c_l))
 					{
 					    ft_putstr("Error: terminal to small\n");
@@ -164,10 +184,14 @@ int	ft_select_kernel(const int ac, const char **av)
 					}
 				    ck++;
 				    ft_select_tree_free(&t_t_c); // return 0 si pas alloue
+				    //ft_p_t_c(t_c_l);
+				    //exit(0);
 				    if (!(t_t_c = ft_select_tree_col_new(&l, (const t_config_liste*)t_c_l)))
 				    	return (0);
+				    
 				}
 			    free (buff);
+			    buff = NULL;
 			    buff = ft_strnew(10000);
 			    loop = 0;
 		    }
@@ -182,12 +206,56 @@ int	ft_select_kernel(const int ac, const char **av)
 	return (1);
 }
 
+void	ft_pp(int a)
+{
+    static int c = 0;
+    struct termios term;
+    char *sp;
+const char      *name_term;// = getenv("TERM");                                                                                        
+  
+    
+  if ((name_term = getenv("TERM")) == NULL)
+	return (-1);
+    if (tgetent(NULL, name_term) != 1)
+	return (-1);
+    if (tcgetattr(0, &term) == -1)
+	return (-1);
+  
+
+      
+ sp = ft_strnew(2);
+    *sp = term.c_cc[VSUSP];
+    *(sp + 1) = 0;
+    //if (a != 20)
+    //	return ;
+               
+    
+    term.c_lflag |= ICANON;
+    term.c_lflag |=  ECHO;
+     if (tcsetattr(0, 0, &term) == -1)
+	 return (-1);
+    
+    
+    //exit (0);
+    // char    cp[2] = {term.c_cc[VSUSP], 0};
+     //    signal(20, SIG_DFL); //ctrl-z
+    ft_putstr("\033[?1049l"); //recharge le svg du terminal
+   
+    signal(SIGTSTP, SIG_DFL);
+    ioctl(0, TIOCSTI, sp);
+    sp = NULL;
+    
+	return;
+}
+
+
 void ft_p(int a)
 {
     const char      *name_term;// = getenv("TERM");                                                                                        
     struct termios term;
     const char *res;
 
+    ft_putstr("\033[?1049h\033[H"); //svg du terminal
     ft_putstr("\e[1;1H\e[2J"); //clear
     //signal ctrl+C
     //  signal(2, SIG_IGN);
@@ -203,36 +271,35 @@ void ft_p(int a)
     term.c_cc[VTIME] = 0;
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return (-1);
+    signal(SIGTSTP, ft_pp);
 }
-void	ft_pp(int a)
-{
-    /*    struct termios term;
- 
-    if (a != 20)
-	return ;
-    if (tcgetattr(0, &term) == -1)
-	return (-1);
-    term.c_lflag = (ICANON | ECHO);
-    if (tcsetattr(0, 0, &term) == -1)
-	return (-1);
-    */
-    // ft_putstr("\033[?1049l"); //recharge le svg du terminal
-    //exit (0);
-    
-    signal(20, SIG_DFL); //ctrl-z
-	return;
-}
+
 
 int	main(int ac, char **av)
 {
-    int num_sig = 18; // fg;
+    //    int num_sig = 18; // fg;
     void    (*f)(int);
     // ne pas oublier diniber le ctrl-c == 2;
+    int num_sig;
+    /*    
+    for (num_sig = 1; num_sig < NSIG ; num_sig++)
+	{
+	    //      printf("%d\n", num_sig );                                                                                      
+	    //if (num_sig == 2 || num_sig == 18)                                                                                   
+	    
+		signal(num_sig, SIG_IGN);
+
+	    //printf("VALEUR RENVOYER: %d\n", num_sig);                                                                    
+	}
+    */
+
     f = (ft_p);
     ft_putstr("\033[?1049h\033[H"); //svg du terminal
-    signal(num_sig, f);
+    signal(18, f);
     f = (ft_pp);
-    signal(20, f); //ctrl-z
+    
+    signal(SIGTSTP, ft_pp);
+     signal(20, f); //ctrl-z
     //signal ctrl+C
     //  signal(2, SIG_IGN);
 

@@ -58,7 +58,7 @@ int		ft_select_ptr_curseur(t_tree_col **t_t_c, t_liste **liste, const t_config_l
     l = *liste;
     while (l)
     {
-	if (l->si_etat == 2)
+	if (l->si_etat == 2  || l->si_etat == 3)
 	    break;
 	l = l->n;
     }
