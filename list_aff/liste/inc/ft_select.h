@@ -22,4 +22,13 @@ struct	s_init
     int			(****f)(t_config_liste **t_c_l, t_tree_col **t_t_c);
 };
 
+typedef struct s_kernel	t_kernel;
+struct	s_kernel
+{
+    int ck;
+    int loop;
+    int sup;
+    int ctrl_z;
+};
+
 #endif
