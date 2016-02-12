@@ -29,6 +29,9 @@ struct	s_kernel
     int loop;
     int sup;
     int ctrl_z;
+    int key;
+    short int j;
+    short int i;
 };
 
 #endif
