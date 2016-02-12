@@ -24,6 +24,19 @@ static void ft_putstr_space(int pad)
     return ;
 }
 
+
+void	ft_putstr_n(char *s, int i)
+{
+    while (i)
+	{
+	    ft_putchar(*s);
+	    *s++;
+	    i--;
+	}
+    ft_putstr("\".\"  ");
+    return ;
+}
+
 static void	ft_cancel_puts_mode(void)
 {
     const char *res;
@@ -40,8 +53,16 @@ static void ft_putstr_s_name_0(const char *s, int _pa)
 
     //  i++;
 //  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
-    ft_putstr(s);
+    if (ft_strlen(s) <= 20)
+	{
+	    ft_putstr(s);
+	    ft_putstr_space(_pa);
+	}
+    else
+	ft_putstr_n(s, 20);
+    /*    ft_putstr(s);
     ft_putstr_space(_pa);
+    */
     return ;
 }
 
@@ -60,9 +81,16 @@ static void ft_putstr_s_name_reverse_video(const char *s, int _pa)
 	return (-1);
    ft_putstr(res);
 //  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
-    ft_putstr(s);
+      if (ft_strlen(s) <= 20)
+	  {
+	      ft_putstr(s);
+	      ft_putstr_space(_pa);
+	  }
+    else
+	ft_putstr_space(25);
+      //ft_putstr(s);
     ft_cancel_puts_mode();
-    ft_putstr_space(_pa);
+    //ft_putstr_space(_pa);
     return ;
 }
 
@@ -77,11 +105,19 @@ static void ft_putstr_s_name_underligne(const char *s, int _pa)
     ft_putstr(res);
     // i++;
 //  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
-    ft_putstr(s);
-      ft_cancel_puts_mode();
-    ft_putstr_space(_pa);
+    if (ft_strlen(s) <= 20)
+	{
+	    ft_putstr(s);
+	    ft_putstr_space(_pa);
+	}
+    else
+	ft_putstr_space(25);
+    //ft_putstr(s);
+    ft_cancel_puts_mode();
+    //ft_putstr_space(_pa);
     return ;
 }
+
 
 static void ft_putstr_s_name_reverse_underligne(const char *s, int _pa)
 {
@@ -96,9 +132,16 @@ static void ft_putstr_s_name_reverse_underligne(const char *s, int _pa)
 	return (-1);
     ft_putstr(res);
 //  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
-    ft_putstr(s);
+    if (ft_strlen(s) <= 20)
+	{
+	    ft_putstr(s);
+	    ft_putstr_space(_pa);
+	}
+    else
+	ft_putstr_space(25);
+    //ft_putstr(s);
     ft_cancel_puts_mode();
-    ft_putstr_space(_pa);
+    //ft_putstr_space(_pa);
     return ;
 }
 

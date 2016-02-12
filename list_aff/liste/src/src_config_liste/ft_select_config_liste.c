@@ -29,6 +29,8 @@ int					ft_length_str_liste_max(const t_liste *liste)
 		    break;
 		liste = liste->n;
 	}
+	if (i_length > 20)
+	    return (25);
 	// a changer definir une taille max!
 	// la troncature se fera au moment de laffichage !!
 	return (i_length + 5);

@@ -58,6 +58,7 @@ int	ft_select_terminal_init(struct termios *terminal)
     term.c_cc[VTIME] = 0;
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return (-1);
+    ft_putstr(tgetstr("vi", NULL));
     return (0);
 }
 
@@ -187,8 +188,8 @@ int	ft_select_init_free(t_init **init)
     ft_select_tree_tab_f_free(&(*init)->t); // return 0 si pas alloue
     ft_select_tab_key_free(&(*init)->f);
 
-    free(init); //??
-    init = NULL;
+    //    free(init); //??
+    //init = NULL;
 	return (0);
 }
 
@@ -275,10 +276,35 @@ int	ft_term_print_good_size(t_init **init, t_kernel **ker, short int *i, short i
     return (0);
 }
 
+int	ft_select_out(t_liste *t_l)
+{
+    int i;
+
+    i = 0;
+    while (t_l)
+	{
+	    if (t_l->si_etat == 1 || t_l->si_etat == 3) 
+		{
+		    if(i > 0)
+			ft_putchar(' ');
+		}
+	    if (t_l->si_etat == 1 || t_l->si_etat == 3)
+		{
+		    i++;
+		    ft_putstr(t_l->s_name);
+		}
+	    if (t_l->si_end == 1)
+		break ;		
+	    t_l = t_l->n;
+	}
+    return (0);
+}
 
 int	ft_select_end(t_init **init, t_kernel **ker, char **buff)
 {
-    ft_putnbr((*ker)->key);
+    if ((*ker)->key == 5)
+	ft_select_out((*init)->t_l);
+    ft_select_init_free(init);
     return (0);
 }
 
@@ -296,9 +322,13 @@ int	ft_select_kernel(const int ac, const char **av)
 	ft_term_print_too_small(&(*ker).i, &(*ker).j);
 	ft_term_print_good_size(&init, &ker, &(*ker).i, &(*ker).j);
 	if (ker->loop > 500000)
-	    if (read(0, buff, 10000) > 0)
-		if (((*ker).key = ft_select_read(&buff, &init, &ker)) != 0) //echap ou enter
-			break;
+	    {
+		if (read(0, buff, 10000) > 0)
+		    {
+			if (((*ker).key = ft_select_read(&buff, &init, &ker)) != 0) //echap ou enter
+			    break;
+		    }
+	    }
 	(*ker).loop++;
 	(*ker).ctrl_z++;
     }
@@ -311,7 +341,7 @@ void	ft_pp(int a)
 {
     struct termios term;
     char *sp;
-const char      *name_term;// = getenv("TERM");                                                                                        
+    const char      *name_term;// = getenv("TERM");                                                                                        
   
     (void)a;
   if ((name_term = getenv("TERM")) == NULL)
@@ -327,6 +357,7 @@ const char      *name_term;// = getenv("TERM");
     term.c_lflag |=  ECHO;
      if (tcsetattr(0, 0, &term) == -1)
 	 return ;
+     ft_putstr(tgetstr("ve", NULL));
     ft_putstr("\033[?1049l"); //recharge le svg du terminal
     signal(SIGTSTP, SIG_DFL);
     ioctl(0, TIOCSTI, sp);
@@ -339,13 +370,10 @@ void ft_p(int a)
 {
     const char      *name_term;// = getenv("TERM");                                                                                        
     struct termios term;
-//    const char *res;
 
-(void)a;
+    (void)a;
     ft_putstr("\033[?1049h\033[H"); //svg du terminal
     ft_putstr("\e[1;1H\e[2J"); //clear
-    //signal ctrl+C
-    //  signal(2, SIG_IGN);
     if ((name_term = getenv("TERM")) == NULL)
 	return ;
     if (tgetent(NULL, name_term) != 1)
@@ -359,41 +387,27 @@ void ft_p(int a)
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return ;
     signal(SIGTSTP, ft_pp);
+    ft_putstr(tgetstr("vi", NULL));
     return ;
 }
 
 
 int	main(int ac, char **av)
 {
-    //    int num_sig = 18; // fg;
     void    (*f)(int);
-    // ne pas oublier diniber le ctrl-c == 2;
-   // int num_sig;
-    /*    
-    for (num_sig = 1; num_sig < NSIG ; num_sig++)
+    int num_sig;
+        
+    /*    for (num_sig = 1; num_sig < NSIG ; num_sig++)
 	{
-	    //      printf("%d\n", num_sig );                                                                                      
-	    //if (num_sig == 2 || num_sig == 18)                                                                                   
-	    
 		signal(num_sig, SIG_IGN);
-
-	    //printf("VALEUR RENVOYER: %d\n", num_sig);                                                                    
-	}
-    */
-    
+		}*/
     f = (ft_p);
     ft_putstr("\033[?1049h\033[H"); //svg du terminal
-    signal(18, f);
+    signal(18, f); //fg
     f = (ft_pp);
-    
     signal(SIGTSTP, ft_pp);
-     signal(20, f); //ctrl-z
-    //signal ctrl+C
-    //  signal(2, SIG_IGN);
-
+    signal(20, f); //ctrl-z
     if (!(ft_select_kernel((const int)(ac - 1), (const char **)++av)))
 		return (0);
-//	// printf("align %zu\n", sizeof(t_liste));
-//	ft_putstr("HELLO\n");
-	return (0);
+    return (0);
 }
