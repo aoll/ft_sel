@@ -72,15 +72,18 @@ int	ft_select_struct_init(t_init **init, const int ac, const char **av)
 
     if ((i->t_c_l = ft_select_config_liste_new((const t_liste*)(i->t_l))) == NULL)
 	return (1);
-    if (!ft_select_config_init(&i->t_c_l))
-	ft_putstr("Error: terminal to small\n");
+    if (ft_select_config_init(&i->t_c_l) < 0)
+	{
+	    ft_putstr("Error: terminal to small\n");//------------------------------------------------------- < 0
+	    
+	}
     if (!(i->t_t_c = ft_select_tree_col_new(&i->t_l, (const t_config_liste*)i->t_c_l)))
 	return (1);
     ft_select_tree_tab_f(&i->t);
     if (!(ft_select_tab_key_new(&i->f)))
 	return (1);
-
 *init = i;
+
 	return (0);
 }
 
@@ -111,18 +114,19 @@ int	ft_select_config_with_size(t_init **init, int *ck)
 {
     if (ft_select_ck_size_screen(&(*init)->t_c_l))
     {
-	if (!ft_select_config_init(&(*init)->t_c_l))
-	{
+	if (ft_select_config_init(&(*init)->t_c_l) < 0)
+        {	    
+	    ft_putstr("\e[1;1H\e[2J"); //clear
 	    ft_putstr("Error: terminal to small\n");
 	    return (-1);
 	}
 	(*ck)++;
 	ft_select_tree_free(&(*init)->t_t_c); // return 0 si pas alloue
-	if (!((*init)->t_t_c = ft_select_tree_col_new(&(*init)->t_l,\
-(const t_config_liste*)(*init)->t_c_l)))
+	if (!((*init)->t_t_c = ft_select_tree_col_new(&(*init)->t_l,	\
+						      (const t_config_liste*)(*init)->t_c_l)))
 	    return (-1);
     }
-	return (0);
+    return (1);
 }
 
 int	ft_select_print_out(int *ck, int *ctrl_z, t_init **init)
@@ -145,25 +149,34 @@ int	ft_select_print_out(int *ck, int *ctrl_z, t_init **init)
 
 int	ft_select_sup(int *sup, int *ck, t_init **init)
 {
-	if ((*sup) == 2 || (*sup) == 3)
+    int i;
+
+    i = 0;
+    if ((*sup) == 2 || (*sup) == 3)
+    {
+	if ((*sup) == 3) // pourrait se faire avec une fonction qui prend (*sup) et ladresse de liste en parametre, retourne (*sup) , mais avant si (*sup) == 3 (*sup) liste.0
 	{
-	    if ((*sup) == 3) // pourrait se faire avec une fonction qui prend (*sup) et ladresse de liste en parametre, retourne (*sup) , mais avant si (*sup) == 3 (*sup) liste.0
-	    {
-		ft_select_free_liste_0(&(*init)->t_l);
-	    }
-	    if (((*init)->t_c_l = ft_select_config_liste_new((const t_liste*)((*init)->t_l))) == NULL)
-		return (-1);
-	    if (!ft_select_config_init(&(*init)->t_c_l))
-	    {
-		ft_putstr("Error: terminal to small\n");
-		return (-1);
-	    }
-	    (*ck)++;
-	    ft_select_tree_free(&(*init)->t_t_c); // return 0 si pas alloue
-	    if (!((*init)->t_t_c = ft_select_tree_col_new(&(*init)->t_l, (const t_config_liste*)(*init)->t_c_l)))
-		return (-1);
+	    ft_select_free_liste_0(&(*init)->t_l);
 	}
-	return (0);
+	if (((*init)->t_c_l = ft_select_config_liste_new((const t_liste*)((*init)->t_l))) == NULL)
+	    return (-1);
+	if (ft_select_config_init(&(*init)->t_c_l) < 0)
+        {
+	    if (!i)
+		{
+		    ft_putstr("\e[1;1H\e[2J"); //clear
+		    ft_putstr("Error: terminal to small\n");
+		    return (-1);
+		}
+	    i++;
+	    //return (-1);
+	}
+	(*ck)++;
+	ft_select_tree_free(&(*init)->t_t_c); // return 0 si pas alloue
+	if (!((*init)->t_t_c = ft_select_tree_col_new(&(*init)->t_l, (const t_config_liste*)(*init)->t_c_l)))
+	    return (-1);
+    }
+    return (0);
 }
 
 int	ft_select_init_free(t_init **init)
@@ -213,26 +226,60 @@ int	ft_select_read(char **buff, t_init **init, t_kernel **ker)
 }
 
 
+int	ft_ck_size(void)
+{
+    struct winsize  size;
+
+    if (ioctl(STDIN_FILENO,TIOCGWINSZ, (char*) &size) < 0)
+	return (-1);
+    if (size.ws_col < 25)
+	//exit (0);
+	return (1);
+    return (0);
+}
+
 int	ft_select_kernel(const int ac, const char **av)
 {
     t_kernel *ker;
     char *buff;
     t_init *init;
+    int i = 1;
+    int j = 1;
 
     ker = malloc(sizeof(t_kernel));
     if (ft_select_init(&init, &ker, ac, av) < 0 || !(buff = ft_strnew(10000)))
 	return (-1);
     while (1 == 1)
     {
-	if (ft_select_config_with_size(&init, &ker->ck) < 0)
-	    return (-1);
-	ft_select_print_out(&ker->ck, &ker->ctrl_z, &init);
+	if (i == 1)
+	    {
+		if (j == 1)
+		    {
+			ft_putstr(tgoto(tgetstr("cm", NULL), 0, 0));//, stdout);
+			ft_putstr("\e[1;1H\e[2J"); //clear
+			ft_putstr(tgoto(tgetstr("cm", NULL), 0, 0));//, stdout);
+			ft_putstr("TERMINAL TOO SMALL !!!");
+		    }
+		i++;
+		j = 2;
+	    }
+	if (ft_ck_size() == 0)
+	    {
+		if (ft_select_config_with_size(&init, &ker->ck) > 0)
+		    {
+			ft_select_print_out(&ker->ck, &ker->ctrl_z, &init);
+		    }
+		i = 2;
+		j = 1;
+	    }
+	else
+	    i = 1;
 	if (ker->loop > 500000)
 	    if (read(0, buff, 10000) > 0)
-	    {
-		if (ft_select_read(&buff, &init, &ker) != 0)
-		    break;
-	    }
+		{
+		    if (ft_select_read(&buff, &init, &ker) != 0)
+			break;
+		}
 	(*ker).loop++;
 	(*ker).ctrl_z++;
     }

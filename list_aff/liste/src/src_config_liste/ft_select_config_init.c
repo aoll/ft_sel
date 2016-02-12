@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../../inc/ft_select_config_liste.h"
+#include <sys/ioctl.h>
+
 
 int	ft_only_one_col(t_config_liste **t_c_l)
 {
@@ -48,12 +50,17 @@ int	ft_many_col(t_config_liste **t_c_l)
 int			ft_select_config_init(t_config_liste **t_c_l)//, const t_liste *liste)
 {
 	t_config_liste	*t;
+	struct winsize  size;
 
+        if (ioctl(STDIN_FILENO,TIOCGWINSZ, (char*) &size) < 0)
+	    return (-1);
 	if (*t_c_l == NULL)
-	    return (0); 
-	t = *t_c_l;
+	    return (-1); 
+    	t = *t_c_l;
+	t->si_y_term = (short int)size.ws_row;
+        t->si_x_term = (short int)size.ws_col;
 	if (t->si_x_term < t->i_l_str_max)
-		return (0);
+		return (-1);
 	if (t->si_y_term >= t->i_nb_liste)
 	    return (ft_only_one_col(t_c_l));
 	else
