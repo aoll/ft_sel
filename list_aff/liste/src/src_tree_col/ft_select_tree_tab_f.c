@@ -49,10 +49,6 @@ static void	ft_cancel_puts_mode(void)
 
 static void ft_putstr_s_name_0(const char *s, int _pa)
 {
-    //  static int i = 0;
-
-    //  i++;
-//  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
     if (ft_strlen(s) <= 20)
 	{
 	    ft_putstr(s);
@@ -60,61 +56,51 @@ static void ft_putstr_s_name_0(const char *s, int _pa)
 	}
     else
 	ft_putstr_n(s, 20);
-    /*    ft_putstr(s);
-    ft_putstr_space(_pa);
-    */
     return ;
 }
 
 static void ft_putstr_s_name_reverse_video(const char *s, int _pa)
 {
-    //  static int i = 0;
     const char *res;
 
-    //underligne off
     if ((res = tgetstr("ue", NULL)) == NULL)
 	return (-1);
     ft_putstr(res);
-    // i++;
-    //reverse on
     if ((res = tgetstr("mr", NULL)) == NULL)
 	return (-1);
    ft_putstr(res);
-//  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
-      if (ft_strlen(s) <= 20)
-	  {
-	      ft_putstr(s);
-	      ft_putstr_space(_pa);
-	  }
-    else
-	ft_putstr_space(25);
-      //ft_putstr(s);
-    ft_cancel_puts_mode();
-    //ft_putstr_space(_pa);
+   if (ft_strlen(s) <= 20)
+       {
+	   ft_putstr(s);
+	   ft_cancel_puts_mode();
+	   ft_putstr_space(_pa);
+       }
+   else
+       {
+	   ft_putstr_space(25);
+	   ft_cancel_puts_mode();
+       }
     return ;
 }
 
 static void ft_putstr_s_name_underligne(const char *s, int _pa)
 {
-    // static int i = 0;
     const char *res;
 
     if ((res = tgetstr("us", NULL)) == NULL)
 	return (-1);
-    //  tputs(res, 0, putchar);
     ft_putstr(res);
-    // i++;
-//  printf("i_t_c_l_str == %d\n", t_c_l->i_l_str_max);
     if (ft_strlen(s) <= 20)
 	{
 	    ft_putstr(s);
+	    ft_cancel_puts_mode();
 	    ft_putstr_space(_pa);
 	}
     else
-	ft_putstr_space(25);
-    //ft_putstr(s);
-    ft_cancel_puts_mode();
-    //ft_putstr_space(_pa);
+	{
+	    ft_putstr_space(25);
+	    ft_cancel_puts_mode();
+	}
     return ;
 }
 
@@ -135,6 +121,7 @@ static void ft_putstr_s_name_reverse_underligne(const char *s, int _pa)
     if (ft_strlen(s) <= 20)
 	{
 	    ft_putstr(s);
+	    ft_cancel_puts_mode();
 	    ft_putstr_space(_pa);
 	}
     else

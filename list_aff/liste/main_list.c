@@ -11,304 +11,15 @@
 /* ************************************************************************** */
 
 #include "inc/ft_select.h"
-
+/*
 void	ft_p_t_c(t_config_liste *t)
 {
 	printf("y_term = %d,  x_term = %d, str_max = %d, i_nb_l = %d, i_nb_col = %d, i_nb_coll_aff = %d, i_index_coll_a_aff = %d\n", t->si_y_term ,  t->si_x_term ,  t->i_l_str_max ,  t->i_nb_ligne_col ,  t->i_nb_col , t->i_nb_col_aff, t->i_index_col_aff);
 	return ;
 }
+*/
 
-int	ft_select_ck_size_screen(t_config_liste **t_c_l)
-{
-	struct winsize  size;
-	int				ck;
-
-	ck = 0;
-    if (ioctl(STDIN_FILENO,TIOCGWINSZ, (char*) &size) < 0)
-        return (0);
-	
-    if ((*t_c_l)->si_y_term != (short int)size.ws_row)
-	{
-		(*t_c_l)->si_y_term = (short int)size.ws_row;
-		ck++;
-	}
-	if ((*t_c_l)->si_x_term != (short int)size.ws_col)
-	{
-		(*t_c_l)->si_x_term = (short int)size.ws_col;
-		ck++;
-	}
-	return (ck);
-}
-
-int	ft_select_terminal_init(struct termios *terminal)
-{
-    const char      *name_term;// = getenv("TERM");                                                                                   
-    struct termios term;
-
-    term = *terminal;
-    if ((name_term = getenv("TERM")) == NULL)
-	return (-1);
-    if (tgetent(NULL, name_term) != 1)
-	return (-1);
-    if (tcgetattr(0, &term) == -1)
-	return (-1);
-    term.c_lflag &= ~(ICANON);
-    term.c_lflag &= ~(ECHO);
-    term.c_cc[VMIN] = 0; 
-    term.c_cc[VTIME] = 0;
-    if (tcsetattr(0, TCSADRAIN, &term) == -1)
-	return (-1);
-    ft_putstr(tgetstr("vi", NULL));
-    return (0);
-}
-
-int	ft_select_struct_init(t_init **init, const int ac, const char **av)
-{
-    t_init *i;
-
-    i = malloc(sizeof(t_init));
-    if ((i->t_l = ft_select_liste((const int)(ac),			\
-			     (const char **)(av))) == NULL)
-	return (1);
-
-    if ((i->t_c_l = ft_select_config_liste_new((const t_liste*)(i->t_l))) == NULL)
-	return (1);
-    if (ft_select_config_init(&i->t_c_l) < 0)
-	{
-	    ft_putstr("Error: terminal to small\n");//------------------------------------------------------- < 0
-	    
-	}
-    if (!(i->t_t_c = ft_select_tree_col_new(&i->t_l, (const t_config_liste*)i->t_c_l)))
-	return (1);
-    ft_select_tree_tab_f(&i->t);
-    if (!(ft_select_tab_key_new(&i->f)))
-	return (1);
-*init = i;
-
-	return (0);
-}
-
-int	ft_select_free_liste_0(t_liste **t_l)
-{
-    t_liste *tmp;
-    t_liste *l;
-
-    l = *t_l;
-    tmp = l;
-    l = l->n;
-    l->p->p->n = l;
-    l->p = l->p->p;
-    l->si_start = 1;
-    if (l->si_etat == 1)
-	l->si_etat = 3;
-    else
-	l->si_etat = 2;
-    free(tmp->s_name);
-    tmp->s_name = NULL;
-    free (tmp);
-    tmp = NULL; // doit etre free de linterieur !!
-    *t_l = l;
-    return (0);
-}
-
-int	ft_select_config_with_size(t_init **init, int *ck)
-{
-    if (ft_select_ck_size_screen(&(*init)->t_c_l))
-    {
-	if (ft_select_config_init(&(*init)->t_c_l) < 0)
-        {	    
-	    ft_putstr("\e[1;1H\e[2J"); //clear
-	    ft_putstr("Error: terminal to small\n");
-	    return (-1);
-	}
-	(*ck)++;
-	ft_select_tree_free(&(*init)->t_t_c); // return 0 si pas alloue
-	if (!((*init)->t_t_c = ft_select_tree_col_new(&(*init)->t_l,	\
-						      (const t_config_liste*)(*init)->t_c_l)))
-	    return (-1);
-    }
-    return (1);
-}
-
-int	ft_select_print_out(int *ck, int *ctrl_z, t_init **init)
-{
-    char *goto_str;//, *clear_str; // doit etre free!!!!!
-   
-  goto_str = tgetstr("cm", NULL);    
-    if ((*ck) || (*ctrl_z) > 1000000)
-    {
-	if ((*ctrl_z) > 1000000)
-	    ft_tree_col_init_tab(&((*init)->t_t_c->ptr_tab), &(*init)->t_l, (*init)->t_c_l->i_nb_ligne_col, (*init)->t_c_l->i_nb_col);
-	ft_putstr(tgoto(goto_str, 0, 0));//, stdout);
-	ft_putstr("\e[1;1H\e[2J"); //clear
-	ft_select_tree_print((*init)->t_t_c, (const t_config_liste*)(*init)->t_c_l, (*init)->t);
-	(*ck) = 0;
-	(*ctrl_z) = 0;
-    }  
-    return (0);
-}
-
-int	ft_select_sup(int *sup, int *ck, t_init **init)
-{
-    int i;
-
-    i = 0;
-    if ((*sup) == 2 || (*sup) == 3)
-    {
-	if ((*sup) == 3) // pourrait se faire avec une fonction qui prend (*sup) et ladresse de liste en parametre, retourne (*sup) , mais avant si (*sup) == 3 (*sup) liste.0
-	{
-	    ft_select_free_liste_0(&(*init)->t_l);
-	}
-	if (((*init)->t_c_l = ft_select_config_liste_new((const t_liste*)((*init)->t_l))) == NULL)
-	    return (-1);
-	if (ft_select_config_init(&(*init)->t_c_l) < 0)
-        {
-	    if (!i)
-		{
-		    ft_putstr("\e[1;1H\e[2J"); //clear
-		    ft_putstr("Error: terminal to small\n");
-		    return (-1);
-		}
-	    i++;
-	    //return (-1);
-	}
-	(*ck)++;
-	ft_select_tree_free(&(*init)->t_t_c); // return 0 si pas alloue
-	if (!((*init)->t_t_c = ft_select_tree_col_new(&(*init)->t_l, (const t_config_liste*)(*init)->t_c_l)))
-	    return (-1);
-    }
-    return (0);
-}
-
-int	ft_select_init_free(t_init **init)
-{
-    ft_select_liste_free(&(*init)->t_l); // return 0 si pas alloue
-    ft_select_config_free(&(*init)->t_c_l); // return 0 si pas alloue
-    ft_select_tree_free(&(*init)->t_t_c); // return 0 si pas alloue
-    ft_select_tree_tab_f_free(&(*init)->t); // return 0 si pas alloue
-    ft_select_tab_key_free(&(*init)->f);
-
-    //    free(init); //??
-    //init = NULL;
-	return (0);
-}
-
-int	ft_select_buff_reset(char **buff, int *loop)
-{
-    if ((*buff))
-	free ((*buff));
-    (*buff) = NULL;
-    (*buff) = ft_strnew(10000);
-    (*loop) = 0;
-    return (0);
-}
-int	ft_select_init(t_init **init, t_kernel **ker, const int ac, const char **av)
-{
-    struct termios term;
-
-    if (ft_select_terminal_init(&term) < 0)
-	return (-1);
-    if (ft_select_struct_init(init, (const int)(ac), (const char **)(av)) < 0)
-	return (-1);
-    (*ker)->ck = 1;
-    (*ker)->ctrl_z = 5;
-    (*ker)->loop = 0;
-    (*ker)->i = 1;
-    (*ker)->j = 1;
-    return (0);
-}
-
-int	ft_select_read(char **buff, t_init **init, t_kernel **ker)
-{
-    ft_tree_col_init_tab(&((*init)->t_t_c->ptr_tab), &(*init)->t_l, (*init)->t_c_l->i_nb_ligne_col, (*init)->t_c_l->i_nb_col);
-    if (((*ker)->sup = (*init)->f[ft_select_table_0((*buff))][ft_select_table_1((*buff))][ft_select_table_2((*buff))](&(*init)->t_c_l, &(*init)->t_t_c)) == 0)
-	(*ker)->ck++;
-    ft_select_sup(&(*ker)->sup, &(*ker)->ck, init); // en fonction du retour break et free
-    ft_select_buff_reset(buff, &(*ker)->loop);
-    if ((*ker)->sup == 4 || (*ker)->sup == 5)
-	return ((*ker)->sup);
-    return (0);
-}
-
-
-int	ft_ck_size(void)
-{
-    struct winsize  size;
-
-    if (ioctl(STDIN_FILENO,TIOCGWINSZ, (char*) &size) < 0)
-	return (-1);
-    if (size.ws_col < 25)
-	//exit (0); // pa oublier de checker qu il y est au moins une ligne !!!!!
-	return (1);
-    return (0);
-}
-
-int	ft_term_print_too_small(short int *i, short int *j)
-{
-    if ((*i) == 1)
-	{
-	    if ((*j) == 1)
-		{
-		    ft_putstr(tgoto(tgetstr("cm", NULL), 0, 0));//, stdout);
-		    ft_putstr("\e[1;1H\e[2J"); //clear
-		    ft_putstr(tgoto(tgetstr("cm", NULL), 0, 0));//, stdout);
-		    ft_putstr("TERMINAL TOO SMALL !!!");
-		}
-	    (*i)++;
-	    (*j) = 2;
-	}
-    return (0);
-}
-
-int	ft_term_print_good_size(t_init **init, t_kernel **ker, short int *i, short int *j)
-{
-    if (ft_ck_size() == 0)
-	{
-	    if (ft_select_config_with_size(init, &(*ker)->ck) > 0)
-		{
-		    ft_select_print_out(&(*ker)->ck, &(*ker)->ctrl_z, init);
-		}
-	    (*i) = 2;
-	    (*j) = 1;
-	}
-    else
-	(*i) = 1;
-    return (0);
-}
-
-int	ft_select_out(t_liste *t_l)
-{
-    int i;
-
-    i = 0;
-    while (t_l)
-	{
-	    if (t_l->si_etat == 1 || t_l->si_etat == 3) 
-		{
-		    if(i > 0)
-			ft_putchar(' ');
-		}
-	    if (t_l->si_etat == 1 || t_l->si_etat == 3)
-		{
-		    i++;
-		    ft_putstr(t_l->s_name);
-		}
-	    if (t_l->si_end == 1)
-		break ;		
-	    t_l = t_l->n;
-	}
-    return (0);
-}
-
-int	ft_select_end(t_init **init, t_kernel **ker, char **buff)
-{
-    if ((*ker)->key == 5)
-	ft_select_out((*init)->t_l);
-    ft_select_init_free(init);
-    return (0);
-}
-
-int	ft_select_kernel(const int ac, const char **av)
+static int	ft_select_kernel(const int ac, const char **av)
 {
     t_kernel *ker;
     char *buff;
@@ -334,16 +45,15 @@ int	ft_select_kernel(const int ac, const char **av)
     }
     ft_select_end(&init, &ker, &buff);
     //ft_select_init_free(&init);
-    return (1);
+    return (0);
 }
 
-void	ft_pp(int a)
+static void	ft_restore_term(int ctrl_z)
 {
-    struct termios term;
-    char *sp;
+        struct termios term;
+	char *sp;
     const char      *name_term;// = getenv("TERM");                                                                                        
   
-    (void)a;
   if ((name_term = getenv("TERM")) == NULL)
       return ;
     if (tgetent(NULL, name_term) != 1)
@@ -359,14 +69,23 @@ void	ft_pp(int a)
 	 return ;
      ft_putstr(tgetstr("ve", NULL));
     ft_putstr("\033[?1049l"); //recharge le svg du terminal
-    signal(SIGTSTP, SIG_DFL);
-    ioctl(0, TIOCSTI, sp);
-    sp = NULL;
+    if (ctrl_z)
+	{
+	    signal(SIGTSTP, SIG_DFL);
+	    ioctl(0, TIOCSTI, sp);
+	    sp = NULL;
+	}
+    return ;
+}
+
+static void	ft_ctrl_z(int a)
+{
+    ft_restore_term(1);
     return ;
 }
 
 
-void ft_p(int a)
+static void ft_fg(int a)
 {
     const char      *name_term;// = getenv("TERM");                                                                                        
     struct termios term;
@@ -386,7 +105,7 @@ void ft_p(int a)
     term.c_cc[VTIME] = 0;
     if (tcsetattr(0, TCSADRAIN, &term) == -1)
 	return ;
-    signal(SIGTSTP, ft_pp);
+    signal(SIGTSTP, ft_fg);
     ft_putstr(tgetstr("vi", NULL));
     return ;
 }
@@ -396,16 +115,17 @@ int	main(int ac, char **av)
 {
     void    (*f)(int);
     int num_sig;
-        
-    /*    for (num_sig = 1; num_sig < NSIG ; num_sig++)
+
+    //ne pas oublier de boucler sur tout les signaux !!!! (il suffit de decommmenter en desous ;))        
+        for (num_sig = 1; num_sig < NSIG ; num_sig++)
 	{
 		signal(num_sig, SIG_IGN);
-		}*/
-    f = (ft_p);
+		}
+    f = (ft_fg);
     ft_putstr("\033[?1049h\033[H"); //svg du terminal
     signal(18, f); //fg
-    f = (ft_pp);
-    signal(SIGTSTP, ft_pp);
+    f = (ft_ctrl_z);
+    signal(SIGTSTP, ft_ctrl_z);
     signal(20, f); //ctrl-z
     if (!(ft_select_kernel((const int)(ac - 1), (const char **)++av)))
 		return (0);
